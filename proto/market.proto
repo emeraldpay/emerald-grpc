@@ -1,0 +1,23 @@
+syntax = "proto3";
+package io.emeraldpay.api;
+option java_package = "io.emeraldpay.api.proto";
+
+service Market {
+    rpc StreamRates (GetRateRequest) returns (stream GetRateReply) {}
+}
+
+message GetRateRequest {
+    string to = 1;
+    repeated string from = 2;
+}
+
+message GetRateReply {
+    repeated GetRateReplyItem items = 1;
+}
+
+message GetRateReplyItem {
+    string from = 1;
+    string to = 2;
+    string rate = 3;
+}
+

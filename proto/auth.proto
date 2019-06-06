@@ -1,0 +1,39 @@
+syntax = "proto3";
+package io.emeraldpay.api;
+option java_package = "io.emeraldpay.api.proto";
+
+service Auth {
+    rpc Authenticate (AuthRequest) returns (AuthResponse) {}
+    rpc Refresh(RefreshRequest) returns (AuthResponse) {}
+}
+
+message AuthRequest {
+    repeated string agent_details = 1;
+    repeated string capabilities = 2;
+    repeated string scopes = 3;
+    oneof auth_type {
+        TempAuth temp_auth = 4;
+    }
+}
+
+message TempAuth {
+    string id = 1;
+}
+
+message AuthResponse {
+    bool succeed = 1;
+    uint32 deny_code = 2;
+    string deny_message = 3;
+
+    string token = 10;
+    string secret = 11;
+    uint64 expire = 12;
+    string type = 13; //ex. NONCE-HMAC_SHA256
+}
+
+message RefreshRequest {
+    string token_id = 1;
+    uint64 timestamp = 2;
+    uint64 nonce = 3;
+    bytes  signature = 4;
+}
