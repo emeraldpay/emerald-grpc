@@ -17,8 +17,10 @@ image:https://img.shields.io/npm/v/@emeraldplatform/grpc.svg["npm (scoped)", lin
 
 
 === Java library
+image:https://api.bintray.com/packages/emerald/emerald-grpc/emerald-grpc/images/download.svg["Bintray", link="https://bintray.com/emerald/emerald-grpc/emerald-grpc/"]
 
 * https://github.com/etcdevteam/emerald-grpc-java
+* https://bintray.com/emerald/emerald-grpc/emerald-grpc/
 
 === Rust library
 
