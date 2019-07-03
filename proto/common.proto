@@ -62,6 +62,7 @@ message Asset {
 
 message BlockInfo {
     uint64 height = 1;
-    bytes hash = 2;
+    string block_id = 2;
     uint64 timestamp = 3;
+    bytes weight = 4;
 }

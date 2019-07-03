@@ -4,25 +4,28 @@ option java_package = "io.emeraldpay.api.proto";
 import "common.proto";
 
 service Blockchain {
-    rpc NativeCall (CallBlockchainRequest) returns (stream CallBlockchainReplyItem) {}
     rpc StreamHead (Chain) returns (stream ChainHead) {}
-    rpc TrackAddress (TrackAddressRequest) returns (stream AddressStatus) {}
-    rpc TrackTx (TrackTxRequest) returns (stream TxStatus) {}
+    rpc StreamBalance (BalanceRequest) returns (stream AddressBalance) {}
+    rpc StreamTxStatus (TxStatusRequest) returns (stream TxStatus) {}
+
+    rpc GetBalance (BalanceRequest) returns (stream AddressBalance) {}
+
+    rpc NativeCall (NativeCallRequest) returns (stream NativeCallReplyItem) {}
 }
 
-message CallBlockchainRequest {
+message NativeCallRequest {
     ChainRef chain = 1;
-    repeated CallBlockchainItem items = 2;
+    repeated NativeCallItem items = 2;
 }
 
-message CallBlockchainItem {
+message NativeCallItem {
     uint32 id = 1;
-    string call_type = 2;
+    string method = 2;
     string target = 3;
     bytes payload = 4;
 }
 
-message CallBlockchainReplyItem {
+message NativeCallReplyItem {
     uint32 id = 1;
     bool succeed = 2;
     bytes payload = 3;
@@ -31,34 +34,33 @@ message CallBlockchainReplyItem {
 
 message ChainHead {
     ChainRef chain = 1;
-    int64 height = 2;
-    string hash = 3;
+    uint64 height = 2;
+    string block_id = 3;
+    uint64 timestamp = 4;
+    bytes weight = 5;
 }
 
-message TrackAddressRequest {
-    Asset asset = 1;
-    AnyAddress address = 2;
-    bool include_transactions = 3;
-}
-
-message AddressStatus {
-    Asset asset = 1;
-    SingleAddress address = 2;
-    bytes balance = 3;
-    repeated TxStatus transactions = 4;
-}
-
-message TrackTxRequest {
+message TxStatusRequest {
     ChainRef chain = 1;
-    string txid = 2;
-    uint32 confirmations = 3;
+    string tx_id = 2;
+    uint32 confirmation_limit = 3;
 }
 
 message TxStatus {
-    ChainRef chain = 1;
-    string txid = 2;
-    bool broadcasted = 3;
-    bool mined = 4;
-    BlockInfo block = 5;
-    uint32 confirmations = 6;
+    string tx_id = 1;
+    bool broadcasted = 2;
+    bool mined = 3;
+    BlockInfo block = 4;
+    uint32 confirmations = 5;
+}
+
+message BalanceRequest {
+    Asset asset = 1;
+    AnyAddress address = 2;
+}
+
+message AddressBalance {
+    Asset asset = 1;
+    SingleAddress address = 2;
+    string balance = 3;
 }
