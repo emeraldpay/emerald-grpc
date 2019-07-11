@@ -4,9 +4,9 @@ option java_package = "io.emeraldpay.api.proto";
 import "common.proto";
 
 service Blockchain {
-    rpc StreamHead (Chain) returns (stream ChainHead) {}
-    rpc StreamBalance (BalanceRequest) returns (stream AddressBalance) {}
-    rpc StreamTxStatus (TxStatusRequest) returns (stream TxStatus) {}
+    rpc SubscribeHead (Chain) returns (stream ChainHead) {}
+    rpc SubscribeBalance (BalanceRequest) returns (stream AddressBalance) {}
+    rpc SubscribeTxStatus (TxStatusRequest) returns (stream TxStatus) {}
 
     rpc GetBalance (BalanceRequest) returns (stream AddressBalance) {}
 
