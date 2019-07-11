@@ -3,21 +3,25 @@ package io.emeraldpay.api;
 option java_package = "io.emeraldpay.api.proto";
 
 service Market {
-    rpc StreamRates (GetRateRequest) returns (stream GetRateReply) {}
+    rpc GetRates (GetRatesRequest) returns (GetRatesResponse) {}
 }
 
-message GetRateRequest {
-    string to = 1;
-    repeated string from = 2;
+message GetRatesRequest {
+    repeated Pair pairs = 2;
 }
 
-message GetRateReply {
-    repeated GetRateReplyItem items = 1;
+message Pair {
+    string base = 1;
+    string target = 2;
 }
 
-message GetRateReplyItem {
-    string from = 1;
-    string to = 2;
+message GetRatesResponse {
+    repeated Rate rates = 1;
+}
+
+message Rate {
+    string base = 1;
+    string target = 2;
     string rate = 3;
 }
 
