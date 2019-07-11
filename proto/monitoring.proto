@@ -2,7 +2,7 @@ syntax = "proto3";
 package io.emeraldpay.api;
 option java_package = "io.emeraldpay.api.proto";
 
-service Diagnose {
+service Monitoring {
     rpc Ping (PingRequest) returns (PongResponse) {}
 }
 
