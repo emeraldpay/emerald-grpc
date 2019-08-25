@@ -1,26 +1,26 @@
-= Emerald gRPC & Protobuf
+= Emerald gRPC & Protobuf Definitions
 
 Official gRPC definitions for public Emerald APIs
 
-NOTE: It's a preliminary version, any service or message can be modified/removed without any backward compatibility
-until version 1.0 will be reached
+NOTE: It's a preliminary version, any service or message definition could be modified or removed without a backward compatibility
+until version 1.0 will be reached.
 
-API Version: 0.1.0
+API Version: 0.2
 
 == Libraries
 
 === Javascript library
-image:https://img.shields.io/npm/v/@emeraldplatform/grpc.svg["npm (scoped)", link="https://www.npmjs.com/package/@emeraldplatform/grpc"]
+image:https://img.shields.io/npm/v/@emeraldpay/grpc-client.svg["npm (scoped)", link="https://www.npmjs.com/package/@emeraldpay/grpc-client"]
 
-* https://github.com/etcdevteam/emerald-js-grpc
-* https://www.npmjs.com/package/@emeraldplatform/grpc
+* https://github.com/emeraldpay/emerald-js-client
+* https://www.npmjs.com/package/@emeraldpay/grpc-client
 
 
 === Java library
 image:https://api.bintray.com/packages/emerald/emerald-grpc/emerald-grpc/images/download.svg["Bintray", link="https://bintray.com/emerald/emerald-grpc/emerald-grpc/"]
 
-* https://github.com/etcdevteam/emerald-grpc-java
-* https://bintray.com/emerald/emerald-grpc/emerald-grpc/
+* https://github.com//emeraldpay/emerald-java-client
+* https://bintray.com/emerald/emerald-grpc/emerald-grpc
 
 === Rust library
 
