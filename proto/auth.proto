@@ -28,12 +28,9 @@ message AuthResponse {
     string token = 10;
     string secret = 11;
     uint64 expire = 12;
-    string type = 13; //ex. NONCE-HMAC_SHA256
+    string type = 13; //ex. JWT_RS256, NONCE-HMAC_SHA256
 }
 
 message RefreshRequest {
-    string token_id = 1;
-    uint64 timestamp = 2;
-    uint64 nonce = 3;
-    bytes  signature = 4;
+    string token = 1;
 }
