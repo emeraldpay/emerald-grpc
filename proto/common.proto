@@ -23,6 +23,9 @@ enum ChainRef {
     CHAIN_KOVAN = 10002;
     CHAIN_TESTNET_BITCOIN = 10003;
     CHAIN_FLOONET = 10004;
+    CHAIN_GOERLY = 10005;
+    CHAIN_ROPSTEN = 10006;
+    CHAIN_RINKEBY = 10007;
 
     // Non-standard starts from 50000
 }
