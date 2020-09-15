@@ -63,11 +63,20 @@ message TxStatus {
 message BalanceRequest {
     Asset asset = 1;
     AnyAddress address = 2;
+    bool include_utxo = 3;
 }
 
 message AddressBalance {
     Asset asset = 1;
     SingleAddress address = 2;
+    string balance = 3;
+    bool confirmed = 4;
+    repeated Utxo utxo = 5;
+}
+
+message Utxo {
+    string tx_id = 1;
+    uint64 index = 2;
     string balance = 3;
 }
 
@@ -84,6 +93,7 @@ message DescribeChain {
     repeated NodeDetails nodes = 3;
     repeated string supportedMethods = 4;
     repeated string excludedMethods = 5;
+    repeated Capabilities capabilities = 6;
 }
 
 message StatusRequest {
@@ -108,6 +118,12 @@ enum AvailabilityEnum {
 message NodeDetails {
     uint32 quorum = 1;
     repeated Label labels = 2;
+}
+
+enum Capabilities {
+    CAP_NONE = 0;
+    CAP_CALLS = 1;
+    CAP_BALANCE = 2;
 }
 
 message Label {
