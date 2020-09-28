@@ -35,10 +35,11 @@ message SingleAddress {
 }
 
 message XpubAddress {
-    bytes xpub = 1;
-    string path = 2;
+    // base58 encoded string for xpub, https://en.bitcoin.it/wiki/BIP_0032#Serialization_format
+    string xpub = 1;
     uint64 start = 3;
     uint64 limit = 4;
+    uint64 unused_limit = 5;
 }
 
 message MultiAddress {
