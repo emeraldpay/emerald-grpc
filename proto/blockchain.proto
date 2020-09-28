@@ -78,6 +78,7 @@ message Utxo {
     string tx_id = 1;
     uint64 index = 2;
     string balance = 3;
+    bool spent = 4;
 }
 
 message DescribeRequest {
