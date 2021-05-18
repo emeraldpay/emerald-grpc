@@ -15,10 +15,11 @@ enum ChainRef {
     CHAIN_ETHEREUM = 100;
     CHAIN_ETHEREUM_CLASSIC = 101;
 
-    // Sidechains and state channels
+    // Sidechains and state channels start with 1_000
     CHAIN_LIGHTNING = 1001;
+    CHAIN_MATIC = 1002; // Matic PoS Ethereum sidechain based on Polygon
 
-    // Testnets
+    // Testnets start with 10_000
     CHAIN_MORDEN = 10001;
     CHAIN_KOVAN = 10002;
     CHAIN_TESTNET_BITCOIN = 10003;
@@ -27,7 +28,7 @@ enum ChainRef {
     CHAIN_ROPSTEN = 10006;
     CHAIN_RINKEBY = 10007;
 
-    // Non-standard starts from 50000
+    // Non-standard starts from 20_000
 }
 
 message SingleAddress {
