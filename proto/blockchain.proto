@@ -11,6 +11,7 @@ service Blockchain {
     rpc GetBalance (BalanceRequest) returns (stream AddressBalance) {}
 
     rpc NativeCall (NativeCallRequest) returns (stream NativeCallReplyItem) {}
+    rpc NativeSubscribe (NativeSubscribeRequest) returns (stream NativeSubscribeReplyItem) {}
 
     rpc Describe (DescribeRequest) returns (DescribeResponse) {}
     rpc SubscribeStatus (StatusRequest) returns (stream ChainStatus) {}
@@ -35,6 +36,16 @@ message NativeCallReplyItem {
     bool succeed = 2;
     bytes payload = 3;
     string errorMessage = 4;
+}
+
+message NativeSubscribeRequest {
+    ChainRef chain = 1;
+    string method = 2;
+    bytes payload = 3;
+}
+
+message NativeSubscribeReplyItem {
+    bytes payload = 1;
 }
 
 message ChainHead {
