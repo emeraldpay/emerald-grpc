@@ -15,6 +15,8 @@ enum ChainRef {
     CHAIN_ETHEREUM = 100;
     CHAIN_ETHEREUM_CLASSIC = 101;
     CHAIN_FANTOM = 102; // Fantom, https://fantom.foundation/
+    CHAIN_BSC = 103; // Binance Smart Chain
+    CHAIN_AVALANCHE = 104 // Avalanche C-Chain
 
     // Sidechains and state channels start with 1_000
     // CHAIN_LIGHTNING = 1001;
@@ -29,7 +31,10 @@ enum ChainRef {
     CHAIN_GOERLI = 10005;
     CHAIN_ROPSTEN = 10006;
     CHAIN_RINKEBY = 10007;
-
+    CHAIN_MUMBAI = 10008; // Mumbai Testnet
+    CHAIN_BSCTEST = 10009; // Binance Smart Chain Testnet
+    CHAIN_FUJI = 10010; // Avalanche Fuji C-Chain
+    
     // Non-standard starts from 20_000
 }
 
