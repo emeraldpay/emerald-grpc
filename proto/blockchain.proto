@@ -231,7 +231,7 @@ enum FeeEstimationMode {
  * Standard Ethereum Fee, supported by majority of forks and by Ethereum Mainnet before EIP-1559
  */
 message EthereumStdFees {
-    // Fee value in Wei
+    // Big Number encoded as string. Fee value in Wei
     string fee = 1;
 }
 
@@ -239,11 +239,11 @@ message EthereumStdFees {
  * Ethereum Fee for EIP-1559 compatible forks
  */
 message EthereumExtFees {
-    // Estimated fee that would be actually paid. I.e. it's the Base Fee + Priority Fee
+    // Big Number encoded as string. Estimated fee that expected to be actually paid. I.e. it's the Base Fee + Priority Fee
     string expect = 1;
-    // Priority Fee in Wei
+    // Big Number encoded as string. Priority Fee in Wei
     string priority = 2;
-    // Max Fee value in Wei. Note that it only indicated current preference and actual Max may be significantly lower, depending on the usage scenario.
+    // Big Number encoded as string. Max Fee value in Wei. Note that it only indicates the current preference, and the actual Max may be significantly lower, depending on the usage scenario.
     string max = 3;
 }
 
@@ -252,5 +252,5 @@ message EthereumExtFees {
  */
 message BitcoinStdFees {
     // Fee in Satoshi per Kilobyte. Note that the actual fee calculation MUST divide it by 1024 at the last step to get a fair fee.
-    string satPerKb = 1;
+    uint64 satPerKb = 1;
 }
