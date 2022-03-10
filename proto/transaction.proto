@@ -1,0 +1,54 @@
+syntax = "proto3";
+package emerald;
+option java_package = "io.emeraldpay.api.proto";
+import "common.proto";
+
+service Transaction {
+  rpc GetBalance (BalanceRequest) returns (stream BalanceResponse) {}
+  rpc GetTx (TxRequest) returns (stream TxResponse) {}
+}
+
+message BalanceRequest {
+  Asset asset = 1;
+  repeated AnyAddress address = 2;
+}
+
+message BalanceResponse {
+  Asset asset = 1;
+  repeated SingleAddress address = 2;
+  string balance = 3;
+}
+
+message TxRequest {
+  ChainRef blockchain = 1;
+  uint32 limit = 2;
+  string cursor = 3;
+  repeated AnyAddress address = 4;
+
+  // For Bitcoin, allows to query all unspent transactions to that address
+  bool only_unspent = 5;
+}
+
+message TxResponse {
+  string tx_id = 1;
+  uint64 block_id = 2;
+  uint64 block_height = 3;
+  uint64 block_time = 4;
+  bool mempool = 5;
+  string cursor = 6;
+
+  repeated Transfer transfers = 7;
+}
+
+message XpubReference {
+  uint32 request_address_index = 1;
+  uint32 xpub_index = 2;
+}
+
+message Transfer {
+  repeated SingleAddress address_from = 1;
+  repeated SingleAddress address_to = 2;
+  repeated XpubReference xpub_indexes = 3;
+  uint64 amount = 4;
+  uint64 fee = 5;
+}
