@@ -1,5 +1,5 @@
 syntax = "proto3";
-package emerald;
+package emerald.transaction;
 option java_package = "io.emeraldpay.api.proto";
 import "common.proto";
 
