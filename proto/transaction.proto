@@ -5,7 +5,8 @@ import "common.proto";
 
 service Transaction {
   rpc GetBalance (BalanceRequest) returns (stream BalanceResponse) {}
-  rpc GetTx (TxRequest) returns (stream TxResponse) {}
+  rpc GetAddressTx (AddressTxRequest) returns (stream AddressTxResponse) {}
+  rpc SubscribeAddressTx (AddressTxRequest) returns (stream AddressTxResponse) {}
 }
 
 message BalanceRequest {
@@ -19,36 +20,32 @@ message BalanceResponse {
   string balance = 3;
 }
 
-message TxRequest {
+message AddressTxRequest {
   ChainRef blockchain = 1;
-  uint32 limit = 2;
-  string cursor = 3;
-  repeated AnyAddress address = 4;
+  AnyAddress address = 2;
+  string cursor = 3; // optional
+  uint32 limit = 4; // optional
 
   // For Bitcoin, allows to query all unspent transactions to that address
-  bool only_unspent = 5;
+  bool only_unspent = 5; // default: false
 }
 
-message TxResponse {
+message AddressTxResponse {
   string tx_id = 1;
-  uint64 block_id = 2;
-  uint64 block_height = 3;
-  uint64 block_time = 4;
-  bool mempool = 5;
-  string cursor = 6;
+  BlockInfo block = 2;
+  bool mempool = 3;
+  // N/A for mempool and last blocks (unconfirmed)
+  string cursor = 4;
 
-  repeated Transfer transfers = 7;
-}
+  bool removed = 5; // true if transaction is removed from blockchain
 
-message XpubReference {
-  uint32 request_address_index = 1;
-  uint32 xpub_index = 2;
+  repeated Transfer transfers = 6;
 }
 
 message Transfer {
-  repeated SingleAddress address_from = 1;
-  repeated SingleAddress address_to = 2;
-  repeated XpubReference xpub_indexes = 3;
-  uint64 amount = 4;
-  uint64 fee = 5;
+  SingleAddress address_from = 1;
+  SingleAddress address_to = 2;
+  uint64 amount = 3;
+  uint64 fee = 4; // currently unimplemented for Bitcoin
+  repeated uint32 xpub_indexes = 5; // requested xpub indexes of addresses in transfer
 }
