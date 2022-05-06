@@ -11,7 +11,7 @@ service Transaction {
 
 message BalanceRequest {
   Asset asset = 1;
-  repeated AnyAddress address = 2;
+  AnyAddress address = 2;
 }
 
 message BalanceResponse {
@@ -35,7 +35,7 @@ message AddressTxResponse {
   BlockInfo block = 2;
   bool mempool = 3;
   // N/A for mempool and last blocks (unconfirmed)
-  string cursor = 4;
+  string cursor = 4; // block height + tx index
 
   bool removed = 5; // true if transaction is removed from blockchain
 
