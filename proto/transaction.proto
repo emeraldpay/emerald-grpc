@@ -9,6 +9,11 @@ service Transaction {
   rpc SubscribeAddressTx (AddressTxRequest) returns (stream AddressTxResponse) {}
 }
 
+enum Direction {
+  EARN = 0;
+  SPEND = 1;
+}
+
 message BalanceRequest {
   Asset asset = 1;
   AnyAddress address = 2;
@@ -31,21 +36,23 @@ message AddressTxRequest {
 }
 
 message AddressTxResponse {
-  string tx_id = 1;
-  BlockInfo block = 2;
-  bool mempool = 3;
+  SingleAddress address = 1;
+  uint32 xpub_index = 2; // index of address in xpub if xpub has been requested
+  string tx_id = 3;
+  BlockInfo block = 4;
+  bool mempool = 5;
   // N/A for mempool and last blocks (unconfirmed)
-  string cursor = 4; // block height + tx index
+  string cursor = 6; // block height + tx index
 
-  bool removed = 5; // true if transaction is removed from blockchain
+  bool removed = 7; // true if transaction is removed from blockchain
 
-  repeated Transfer transfers = 6;
+  repeated Transfer transfers = 8;
 }
 
 message Transfer {
-  SingleAddress address_from = 1;
-  SingleAddress address_to = 2;
-  uint64 amount = 3;
-  uint64 fee = 4; // currently unimplemented for Bitcoin
-  repeated uint32 xpub_indexes = 5; // requested xpub indexes of addresses in transfer
+  Direction direction = 1; // EARN or SPEND
+  uint64 amount = 2;
+  uint64 fee = 3; // currently unimplemented for Bitcoin
+  repeated SingleAddress addresses = 4; // counterparty addresses
+  repeated uint32 xpub_indexes = 5; // indexes of counterparty addresses in xpub if xpub has been requested
 }
