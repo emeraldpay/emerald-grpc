@@ -34,11 +34,11 @@ message NativeCallItem {
     uint32 id = 1;
     string method = 3;
     bytes payload = 4;
-    bytes nonce = 5;
+    uint64 nonce = 5;
 }
 
 message NativeCallReplySignature {
-    bytes nonce = 1;
+    uint64 nonce = 1;
     bytes sig = 2;
 }
 
