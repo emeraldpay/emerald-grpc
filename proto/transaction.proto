@@ -1,58 +1,10 @@
 syntax = "proto3";
-package emerald.transaction;
-option java_package = "io.emeraldpay.api.transaction.proto";
-import "common.proto";
+package emerald;
+option java_package = "io.emeraldpay.api.proto.transaction";
+import "transaction.message.proto";
 
 service Transaction {
-  rpc GetBalance (BalanceRequest) returns (stream BalanceResponse) {}
-  rpc GetAddressTx (AddressTxRequest) returns (stream AddressTxResponse) {}
-  rpc SubscribeAddressTx (AddressTxRequest) returns (stream AddressTxResponse) {}
-}
-
-enum Direction {
-  EARN = 0;
-  SPEND = 1;
-}
-
-message BalanceRequest {
-  Asset asset = 1;
-  AnyAddress address = 2;
-}
-
-message BalanceResponse {
-  Asset asset = 1;
-  repeated SingleAddress address = 2;
-  string balance = 3;
-}
-
-message AddressTxRequest {
-  ChainRef blockchain = 1;
-  AnyAddress address = 2;
-  string cursor = 3; // optional
-  uint32 limit = 4; // optional
-
-  // For Bitcoin, allows to query all unspent transactions to that address
-  bool only_unspent = 5; // default: false
-}
-
-message AddressTxResponse {
-  SingleAddress address = 1;
-  uint32 xpub_index = 2; // index of address in xpub if xpub has been requested
-  string tx_id = 3;
-  BlockInfo block = 4;
-  bool mempool = 5;
-  // N/A for mempool and last blocks (unconfirmed)
-  string cursor = 6; // block height + tx index
-
-  bool removed = 7; // true if transaction is removed from blockchain
-
-  repeated Transfer transfers = 8;
-}
-
-message Transfer {
-  Direction direction = 1; // EARN or SPEND
-  uint64 amount = 2;
-  uint64 fee = 3; // currently unimplemented for Bitcoin
-  repeated SingleAddress addresses = 4; // counterparty addresses
-  repeated uint32 xpub_indexes = 5; // indexes of counterparty addresses in xpub if xpub has been requested
+  rpc GetBalance (transaction.BalanceRequest) returns (stream transaction.BalanceResponse) {}
+  rpc GetAddressTx (transaction.AddressTxRequest) returns (stream transaction.AddressTxResponse) {}
+  rpc SubscribeAddressTx (transaction.AddressTxRequest) returns (stream transaction.AddressTxResponse) {}
 }
