@@ -34,6 +34,12 @@ message NativeCallItem {
     uint32 id = 1;
     string method = 3;
     bytes payload = 4;
+    uint64 nonce = 5;
+}
+
+message NativeCallReplySignature {
+    uint64 nonce = 1;
+    bytes sig = 2;
 }
 
 message NativeCallReplyItem {
@@ -41,6 +47,7 @@ message NativeCallReplyItem {
     bool succeed = 2;
     bytes payload = 3;
     string errorMessage = 4;
+    NativeCallReplySignature signature = 5;
 }
 
 message NativeSubscribeRequest {
