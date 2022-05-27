@@ -37,9 +37,26 @@ message NativeCallItem {
     uint64 nonce = 5;
 }
 
+/**
+ * Signature for a response
+ */
 message NativeCallReplySignature {
+    /**
+     * Original nonce value used for the call
+     */
     uint64 nonce = 1;
-    bytes sig = 2;
+    /**
+     * Signature value
+     */
+    bytes signature = 2;
+    /**
+     * Key Id used for the signing
+     */
+    uint64 key_id = 3;
+    /**
+     * Id of the upstream produced the response
+     */
+    string upstream_id = 4;
 }
 
 message NativeCallReplyItem {
@@ -47,6 +64,10 @@ message NativeCallReplyItem {
     bool succeed = 2;
     bytes payload = 3;
     string errorMessage = 4;
+    /**
+     * Optional signature for the response.
+     * Available only when it's configured at the edge dshackle and nonce is provided wit the request.
+     */
     NativeCallReplySignature signature = 5;
 }
 
