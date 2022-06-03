@@ -46,8 +46,8 @@ message AddressTxResponse {
 
 message Transfer {
   Direction direction = 1; // EARN or SPEND
-  uint64 amount = 2;
-  uint64 fee = 3; // currently unimplemented for Bitcoin
+  string amount = 2; // unsigned amount
+  string fee = 3; // unsigned amount, currently unimplemented for Bitcoin
   repeated SingleAddress addresses = 4; // counterparty addresses
   repeated uint32 xpub_indexes = 5; // indexes of counterparty addresses in xpub if xpub has been requested
   string contractAddress = 6; // e.g. ERC-20 token address, optional, empty string for blockchain native token
