@@ -9,6 +9,11 @@ enum Direction {
   SPEND = 1;
 }
 
+message AddressAmount {
+  SingleAddress address = 1; // optional, could be not set if not defined
+  string amount = 2; // unsigned amount
+}
+
 message BalanceRequest {
   Asset asset = 1;
   AnyAddress address = 2;
@@ -48,7 +53,7 @@ message Transfer {
   Direction direction = 1; // EARN or SPEND
   string amount = 2; // unsigned amount
   string fee = 3; // unsigned amount, currently unimplemented for Bitcoin
-  repeated SingleAddress addresses = 4; // counterparty addresses
+  repeated AddressAmount address_amounts = 4; // counterparty addresses and amounts, single record for ETH
   repeated uint32 xpub_indexes = 5; // indexes of counterparty addresses in xpub if xpub has been requested
   string contractAddress = 6; // e.g. ERC-20 token address, optional, empty string for blockchain native token
 }
