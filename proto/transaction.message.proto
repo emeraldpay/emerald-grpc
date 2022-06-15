@@ -1,7 +1,8 @@
 syntax = "proto3";
 package emerald.transaction;
-option java_package = "io.emeraldpay.api.proto.transaction.message";
+option java_package = "io.emeraldpay.api.proto.transaction";
 import "common.proto";
+import "google/protobuf/wrappers.proto";
 
 enum Direction {
   EARN = 0;
@@ -22,8 +23,8 @@ message BalanceResponse {
 message AddressTxRequest {
   ChainRef blockchain = 1;
   AnyAddress address = 2;
-  string cursor = 3; // optional
-  uint32 limit = 4; // optional
+  string cursor = 3; // default: empty for no cursor
+  uint32 limit = 4; // default: 0 for no limit
 
   // For Bitcoin, allows to query all unspent transactions to that address
   bool only_unspent = 5; // default: false
@@ -31,7 +32,7 @@ message AddressTxRequest {
 
 message AddressTxResponse {
   SingleAddress address = 1;
-  uint32 xpub_index = 2; // index of address in xpub if xpub has been requested
+  google.protobuf.UInt32Value xpub_index = 2; // index of address in xpub if xpub has been requested (optional)
   string tx_id = 3;
   BlockInfo block = 4;
   bool mempool = 5;
@@ -45,8 +46,9 @@ message AddressTxResponse {
 
 message Transfer {
   Direction direction = 1; // EARN or SPEND
-  uint64 amount = 2;
-  uint64 fee = 3; // currently unimplemented for Bitcoin
+  string amount = 2; // unsigned amount
+  string fee = 3; // unsigned amount, currently unimplemented for Bitcoin
   repeated SingleAddress addresses = 4; // counterparty addresses
   repeated uint32 xpub_indexes = 5; // indexes of counterparty addresses in xpub if xpub has been requested
+  string contractAddress = 6; // e.g. ERC-20 token address, optional, empty string for blockchain native token
 }
