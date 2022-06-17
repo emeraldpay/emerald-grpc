@@ -36,17 +36,18 @@ message AddressTxRequest {
 }
 
 message AddressTxResponse {
-  SingleAddress address = 1;
-  google.protobuf.UInt32Value xpub_index = 2; // index of address in xpub if xpub has been requested (optional)
-  string tx_id = 3;
-  BlockInfo block = 4;
-  bool mempool = 5;
+  ChainRef blockchain = 1;
+  SingleAddress address = 2;
+  google.protobuf.UInt32Value xpub_index = 3; // index of address in xpub if xpub has been requested (optional)
+  string tx_id = 4;
+  BlockInfo block = 5;
+  bool mempool = 6;
   // N/A for mempool and last blocks (unconfirmed)
-  string cursor = 6; // block height + tx index
+  string cursor = 7; // block height + tx index
 
-  bool removed = 7; // true if transaction is removed from blockchain
+  bool removed = 8; // true if transaction is removed from blockchain
 
-  repeated Transfer transfers = 8;
+  repeated Transfer transfers = 9;
 }
 
 message Transfer {
