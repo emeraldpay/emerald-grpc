@@ -48,6 +48,7 @@ message AddressTxResponse {
   bool removed = 8; // true if transaction is removed from blockchain
 
   repeated Transfer transfers = 9;
+  bool failed = 10; // true if transaction is failed
 }
 
 message Transfer {
