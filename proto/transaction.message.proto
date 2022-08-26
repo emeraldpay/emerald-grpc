@@ -9,6 +9,11 @@ enum Direction {
   SPEND = 1;
 }
 
+message AddressAmount {
+  SingleAddress address = 1; // optional, could be not set if not defined
+  string amount = 2; // unsigned amount
+}
+
 message BalanceRequest {
   Asset asset = 1;
   AnyAddress address = 2;
@@ -31,24 +36,25 @@ message AddressTxRequest {
 }
 
 message AddressTxResponse {
-  SingleAddress address = 1;
-  google.protobuf.UInt32Value xpub_index = 2; // index of address in xpub if xpub has been requested (optional)
-  string tx_id = 3;
-  BlockInfo block = 4;
-  bool mempool = 5;
+  ChainRef blockchain = 1;
+  SingleAddress address = 2;
+  google.protobuf.UInt32Value xpub_index = 3; // index of address in xpub if xpub has been requested (optional)
+  string tx_id = 4;
+  BlockInfo block = 5;
+  bool mempool = 6;
   // N/A for mempool and last blocks (unconfirmed)
-  string cursor = 6; // block height + tx index
+  string cursor = 7; // block height + tx index
 
-  bool removed = 7; // true if transaction is removed from blockchain
+  bool removed = 8; // true if transaction is removed from blockchain
 
-  repeated Transfer transfers = 8;
+  repeated Transfer transfers = 9;
 }
 
 message Transfer {
   Direction direction = 1; // EARN or SPEND
   string amount = 2; // unsigned amount
   string fee = 3; // unsigned amount, currently unimplemented for Bitcoin
-  repeated SingleAddress addresses = 4; // counterparty addresses
+  repeated AddressAmount address_amounts = 4; // counterparty addresses and amounts, single record for ETH
   repeated uint32 xpub_indexes = 5; // indexes of counterparty addresses in xpub if xpub has been requested
   string contractAddress = 6; // e.g. ERC-20 token address, optional, empty string for blockchain native token
 }
