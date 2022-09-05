@@ -62,10 +62,11 @@ message Change {
   SingleAddress address = 2; // Change address, could be empty
   string amount = 3; // unsigned amount
   ChangeType type = 4;
-  SingleAddress contractAddress = 5; // e.g. ERC-20 token address, optional, empty for blockchain native token
+  SingleAddress contract_address = 5; // e.g. ERC-20 token address, optional, empty for blockchain native token
   google.protobuf.UInt32Value xpub_index = 6; // index of address in xpub if detected (optional)
 }
 
+// TODO: deprecated
 message Transfer {
   Direction direction = 1; // RECEIVE or SEND
   string amount = 2; // unsigned amount
