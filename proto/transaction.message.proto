@@ -5,8 +5,13 @@ import "common.proto";
 import "google/protobuf/wrappers.proto";
 
 enum Direction {
-  EARN = 0;
-  SPEND = 1;
+  RECEIVE = 0;
+  SEND = 1;
+}
+
+enum ChangeType {
+  CHANGE = 0;
+  FEE = 1;
 }
 
 message AddressAmount {
@@ -47,12 +52,22 @@ message AddressTxResponse {
 
   bool removed = 8; // true if transaction is removed from blockchain
 
-  repeated Transfer transfers = 9;
+  repeated Transfer transfers = 9; // TODO: deprecated
   bool failed = 10; // true if transaction is failed
+  repeated Change changes = 11;
+}
+
+message Change {
+  Direction direction = 1; // RECEIVE or SEND
+  SingleAddress address = 2; // Change address, could be empty
+  string amount = 3; // unsigned amount
+  ChangeType type = 4;
+  SingleAddress contractAddress = 5; // e.g. ERC-20 token address, optional, empty for blockchain native token
+  google.protobuf.UInt32Value xpub_index = 6; // index of address in xpub if detected (optional)
 }
 
 message Transfer {
-  Direction direction = 1; // EARN or SPEND
+  Direction direction = 1; // RECEIVE or SEND
   string amount = 2; // unsigned amount
   string fee = 3; // unsigned amount, currently unimplemented for Bitcoin
   repeated AddressAmount address_amounts = 4; // counterparty addresses and amounts, single record for ETH
