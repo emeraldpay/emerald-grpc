@@ -76,10 +76,12 @@ message NativeSubscribeRequest {
     string method = 2;
     bytes payload = 3;
     Selector selector = 4;
+    uint64 nonce = 5;
 }
 
 message NativeSubscribeReplyItem {
     bytes payload = 1;
+    NativeCallReplySignature signature = 2;
 }
 
 message ChainHead {
