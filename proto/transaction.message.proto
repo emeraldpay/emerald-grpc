@@ -19,6 +19,18 @@ message AddressAmount {
   string amount = 2; // unsigned amount
 }
 
+message XpubStateRequest {
+  ChainRef blockchain = 1;
+  XpubAddress address = 2;
+}
+
+message XpubState {
+  ChainRef blockchain = 1;
+  XpubAddress address = 2;
+  SingleAddress last_address = 3; // last used address
+  google.protobuf.UInt32Value last_index = 4; // last used index
+}
+
 message BalanceRequest {
   Asset asset = 1;
   AnyAddress address = 2;
