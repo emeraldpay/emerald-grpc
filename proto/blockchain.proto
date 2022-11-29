@@ -189,6 +189,8 @@ message Selector {
         NotSelector notSelector = 4;
         ExistsSelector existsSelector = 5;
     }
+
+    bool should_be_forwarded = 100;
 }
 
 message LabelSelector {
