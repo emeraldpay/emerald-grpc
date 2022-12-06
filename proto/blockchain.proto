@@ -55,7 +55,7 @@ message NativeCallReplySignature {
     uint64 key_id = 3;
     /**
      * Id of the upstream produced the response
-     * DEPRECATED - now in NativeSubscribeReplyItem
+     * DEPRECATED - now in reply items
      */
     string upstream_id = 4 [deprecated=true];
 }
@@ -71,6 +71,7 @@ message NativeCallReplyItem {
      */
     NativeCallReplySignature signature = 5;
     uint32 errorCode = 6;
+    string upstream_id = 7;
 }
 
 message NativeSubscribeRequest {
