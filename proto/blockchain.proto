@@ -134,6 +134,7 @@ message Utxo {
 }
 
 message SubscribeNodeStatusRequest {
+    uint64 timespan = 1;
 }
 
 message NodeStatusResponse {
