@@ -145,8 +145,12 @@ message NodeStatusResponse {
 
 message NodeDescription {
     ChainRef chain = 1;
-    repeated Label labels = 2;
+    repeated NodeLabels nodeLabels = 2;
     repeated string supportedMethods = 3;
+}
+
+message NodeLabels {
+    repeated Label labels = 1;
 }
 
 message NodeStatus {
