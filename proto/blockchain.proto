@@ -20,6 +20,7 @@ service Blockchain {
 
     rpc Describe (DescribeRequest) returns (DescribeResponse) {}
     rpc SubscribeStatus (StatusRequest) returns (stream ChainStatus) {}
+    rpc SubscribeNodeStatus(SubscribeNodeStatusRequest) returns (stream NodeStatusResponse) {}
 }
 
 message NativeCallRequest {
@@ -130,6 +131,31 @@ message Utxo {
     uint64 index = 2;
     string balance = 3;
     bool spent = 4;
+}
+
+message SubscribeNodeStatusRequest {
+    uint64 timespan = 1;
+}
+
+message NodeStatusResponse {
+    string nodeId = 1;
+    NodeDescription description = 2;
+    NodeStatus status = 3;
+}
+
+message NodeDescription {
+    ChainRef chain = 1;
+    repeated NodeLabels nodeLabels = 2;
+    repeated string supportedMethods = 3;
+}
+
+message NodeLabels {
+    repeated Label labels = 1;
+}
+
+message NodeStatus {
+    int64 currentHeight = 1;
+    AvailabilityEnum availability = 2;
 }
 
 message DescribeRequest {
