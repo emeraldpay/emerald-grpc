@@ -169,10 +169,19 @@ message DescribeChain {
     ChainRef chain = 1;
     ChainStatus status = 2;
     repeated NodeDetails nodes = 3;
+
+    /**
+     * List of method available through NativeCall
+     */
     repeated string supportedMethods = 4;
     repeated string excludedMethods = 5;
     repeated Capabilities capabilities = 6;
     int64 currentHeight = 7;
+
+    /**
+     * List of subscriptions available through NativeSubscribe
+     */
+    repeated string supportedSubscriptions = 8;
 }
 
 message StatusRequest {
