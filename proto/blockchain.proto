@@ -148,6 +148,7 @@ message NodeDescription {
     repeated NodeLabels nodeLabels = 2;
     repeated string supportedMethods = 3;
     int32 nodeId = 4;
+    repeated string supportedSubscriptions = 5;
 }
 
 message NodeLabels {
