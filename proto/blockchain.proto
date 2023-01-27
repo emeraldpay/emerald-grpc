@@ -135,6 +135,8 @@ message Utxo {
 
 message SubscribeNodeStatusRequest {
     uint64 timespan = 1;
+    // optional param for tracing
+    string trace_id = 2;
 }
 
 message NodeStatusResponse {
