@@ -32,6 +32,7 @@ enum ChainRef {
     CHAIN_GOERLI = 10005;
     CHAIN_ROPSTEN = 10006;
     CHAIN_RINKEBY = 10007;
+    CHAIN_SEPOLIA = 10008;
 
     // Non-standard starts from 20_000
 }
