@@ -33,6 +33,8 @@ enum ChainRef {
     CHAIN_ROPSTEN = 10006;
     CHAIN_RINKEBY = 10007;
     CHAIN_SEPOLIA = 10008;
+    CHAIN_TESTNET_ARBITRUM = 10009;
+    CHAIN_TESTNET_OPTIMISM = 10010;
 
     // Non-standard starts from 20_000
 }
