@@ -152,6 +152,7 @@ message NodeDescription {
     repeated string supportedMethods = 3;
     int32 nodeId = 4;
     repeated string supportedSubscriptions = 5;
+    BuildInfo node_build_info = 6;
 }
 
 message NodeLabels {
@@ -168,6 +169,7 @@ message DescribeRequest {
 
 message DescribeResponse {
     repeated DescribeChain chains = 1;
+    BuildInfo build_info = 2;
 }
 
 message DescribeChain {
@@ -187,6 +189,10 @@ message DescribeChain {
      * List of subscriptions available through NativeSubscribe
      */
     repeated string supportedSubscriptions = 8;
+}
+
+message BuildInfo {
+    string version = 1;
 }
 
 message StatusRequest {
