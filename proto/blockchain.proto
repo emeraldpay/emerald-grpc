@@ -97,6 +97,7 @@ message ChainHead {
     uint64 timestamp = 4;
     bytes weight = 5;
     uint64 reorg = 6;
+    string parent_block_id = 7;
 }
 
 message TxStatusRequest {
