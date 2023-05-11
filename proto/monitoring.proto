@@ -2,6 +2,8 @@ syntax = "proto3";
 package emerald;
 option java_package = "io.emeraldpay.api.proto";
 
+import "google/protobuf/timestamp.proto";
+
 service Monitoring {
     rpc Ping (PingRequest) returns (PongResponse) {}
 }
@@ -10,4 +12,5 @@ message PingRequest {
 }
 
 message PongResponse {
+    google.protobuf.Timestamp timestamp = 1;
 }
