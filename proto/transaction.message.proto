@@ -78,6 +78,17 @@ message Change {
   google.protobuf.UInt32Value xpub_index = 6; // index of address in xpub if detected (optional)
 }
 
+message AddressTokenRequest {
+  ChainRef blockchain = 1;
+  AnyAddress address = 2;
+}
+
+message AddressTokenResponse {
+  ChainRef blockchain = 1;
+  SingleAddress address = 2;
+  repeated SingleAddress contract_addresses = 3; // ERC-20 token addresses
+}
+
 // TODO: deprecated
 message Transfer {
   Direction direction = 1; // RECEIVE or SEND
