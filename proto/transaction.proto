@@ -6,7 +6,13 @@ import "transaction.message.proto";
 service Transaction {
   rpc GetBalance (transaction.BalanceRequest) returns (stream transaction.BalanceResponse) {}
   rpc GetXpubState (transaction.XpubStateRequest) returns (transaction.XpubState) {}
+
   rpc GetAddressTx (transaction.AddressTxRequest) returns (stream transaction.AddressTxResponse) {}
-  rpc GetAddressTokens (transaction.AddressTokenRequest) returns (stream transaction.AddressTokenResponse) {}
   rpc SubscribeAddressTx (transaction.AddressTxRequest) returns (stream transaction.AddressTxResponse) {}
+
+  rpc GetAddressTokens (transaction.AddressTokenRequest) returns (stream transaction.AddressTokenResponse) {}
+  rpc GetAddressAllowance (transaction.AddressAllowanceRequest) returns (stream transaction.AddressAllowanceResponse) {}
+
+  rpc SubscribeAddressTokens (transaction.AddressTokenRequest) returns (stream transaction.AddressTokenResponse) {}
+  rpc SubscribeAddressAllowance (transaction.AddressAllowanceRequest) returns (stream transaction.AddressAllowanceResponse) {}
 }

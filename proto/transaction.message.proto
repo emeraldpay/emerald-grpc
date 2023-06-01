@@ -81,12 +81,30 @@ message Change {
 message AddressTokenRequest {
   ChainRef blockchain = 1;
   AnyAddress address = 2;
+
+  repeated SingleAddress contract_addresses = 3; // contract addresses filter, no filter if empty
 }
 
 message AddressTokenResponse {
   ChainRef blockchain = 1;
   SingleAddress address = 2;
+
   repeated SingleAddress contract_addresses = 3; // ERC-20 token addresses
+}
+
+message AddressAllowanceRequest {
+  ChainRef blockchain = 1;
+  AnyAddress address = 2;
+
+  repeated SingleAddress contract_addresses = 3; // contract addresses filter, no filter if empty
+}
+
+message AddressAllowanceResponse {
+  ChainRef blockchain = 1;
+  SingleAddress address = 2;
+
+  repeated SingleAddress approved_for_address = 3; // ERC-20 token addresses
+  repeated SingleAddress approved_by_address = 4; // ERC-20 token addresses
 }
 
 // TODO: deprecated
