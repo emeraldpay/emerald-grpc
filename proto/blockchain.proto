@@ -66,14 +66,15 @@ message NativeCallReplyItem {
     uint32 id = 1;
     bool succeed = 2;
     bytes payload = 3;
-    string errorMessage = 4;
+    string error_message = 4;
     /**
      * Optional signature for the response.
      * Available only when it's configured at the edge dshackle and nonce is provided wit the request.
      */
     NativeCallReplySignature signature = 5;
-    uint32 errorCode = 6;
+    uint32 error_code = 6;
     string upstream_id = 7;
+    string error_data = 8;
 }
 
 message NativeSubscribeRequest {
