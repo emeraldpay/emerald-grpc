@@ -1,6 +1,7 @@
 syntax = "proto3";
 package emerald;
 option java_package = "io.emeraldpay.api.proto";
+import "common.proto";
 
 service Market {
     rpc GetRates (GetRatesRequest) returns (GetRatesResponse) {}
@@ -11,8 +12,14 @@ message GetRatesRequest {
 }
 
 message Pair {
-    string base = 1;
-    string target = 2;
+    oneof base_type {
+        string base = 1;
+        Erc20Asset erc20_base = 3;
+    }
+    oneof target_type {
+        string target = 2;
+        Erc20Asset erc20_target = 4;
+    }
 }
 
 message GetRatesResponse {
@@ -20,8 +27,14 @@ message GetRatesResponse {
 }
 
 message Rate {
-    string base = 1;
-    string target = 2;
+    oneof base_type {
+        string base = 1;
+        Erc20Asset erc20_base = 4;
+    }
+    oneof target_type {
+        string target = 2;
+        Erc20Asset erc20_target = 5;
+    }
     string rate = 3;
 }
 
