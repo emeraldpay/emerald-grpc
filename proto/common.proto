@@ -67,6 +67,11 @@ message Asset {
     string code = 2;
 }
 
+message Erc20Asset {
+    ChainRef chain = 1;
+    string contract_address = 2;
+}
+
 message BlockInfo {
     uint64 height = 1;
     string block_id = 2;
