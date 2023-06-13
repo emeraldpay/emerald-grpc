@@ -108,13 +108,19 @@ message TxStatus {
 }
 
 message BalanceRequest {
-    Asset asset = 1;
+    oneof balance_type {
+        Asset asset = 1;
+        Erc20Asset erc20_asset = 4;
+    }
     AnyAddress address = 2;
     bool include_utxo = 3;
 }
 
 message AddressBalance {
-    Asset asset = 1;
+    oneof balance_type {
+        Asset asset = 1;
+        Erc20Asset erc20_asset = 6;
+    }
     SingleAddress address = 2;
     string balance = 3;
     bool confirmed = 4;
