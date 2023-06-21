@@ -204,6 +204,7 @@ enum Capabilities {
     CAP_NONE = 0;
     CAP_CALLS = 1;
     CAP_BALANCE = 2;
+    CAP_ALLOWANCE = 3;
 }
 
 message Label {
