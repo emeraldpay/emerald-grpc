@@ -1,0 +1,11 @@
+syntax = "proto3";
+package emerald;
+option java_package = "io.emeraldpay.api.proto";
+import "common.proto";
+import "address.message.proto";
+
+service Address {
+  // Describe an address status
+  rpc Describe (address.DescribeRequest) returns (address.DescribeResponse) {}
+}
+

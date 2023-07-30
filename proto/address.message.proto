@@ -1,0 +1,35 @@
+syntax = "proto3";
+package emerald.address;
+option java_package = "io.emeraldpay.api.proto";
+import "common.proto";
+
+message DescribeRequest {
+  ChainRef chain = 1;
+  SingleAddress address = 2;
+}
+
+message DescribeResponse {
+  // The requested address
+  SingleAddress address = 1;
+  // TBD
+  bool active = 2;
+  // How the address is controlled
+  AddrControl control = 3;
+  // For a contract, which capabilities it has
+  repeated AddressCapability capabilities = 4;
+
+  enum AddrControl {
+    // When there is no information about the address control, ex. address never used
+    CTRL_UNKNOWN = 0;
+    // Controller by a Private Key
+    CTRL_PERSON = 1;
+    // Controller by a Contract
+    CTRL_CONTRACT = 2;
+  }
+}
+
+enum AddressCapability {
+  CAP_INVALID = 0;
+  // Contract is a ERC20 token
+  CAP_ERC20 = 1;
+}
