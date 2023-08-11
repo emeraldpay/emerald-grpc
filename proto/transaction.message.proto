@@ -15,8 +15,10 @@ enum ChangeType {
 }
 
 message AddressAmount {
-  SingleAddress address = 1; // optional, could be not set if not defined
-  string amount = 2; // unsigned amount
+  // optional, could be not set if not defined
+  SingleAddress address = 1;
+  // unsigned amount
+  string amount = 2;
 }
 
 message XpubStateRequest {
@@ -27,8 +29,10 @@ message XpubStateRequest {
 message XpubState {
   ChainRef blockchain = 1;
   XpubAddress address = 2;
-  SingleAddress last_address = 3; // last used address
-  google.protobuf.UInt32Value last_index = 4; // last used index
+  // last used address
+  SingleAddress last_address = 3;
+  // last used index
+  google.protobuf.UInt32Value last_index = 4;
 }
 
 message BalanceRequest {
@@ -45,66 +49,79 @@ message BalanceResponse {
 message AddressTxRequest {
   ChainRef blockchain = 1;
   AnyAddress address = 2;
-  string cursor = 3; // default: empty for no cursor
-  uint32 limit = 4; // default: 0 for no limit
+  // default: empty for no cursor
+  string cursor = 3;
+  // default: 0 for no limit
+  uint32 limit = 4;
 
-  // For Bitcoin, allows to query all unspent transactions to that address
-  bool only_unspent = 5; // default: false
+  // For Bitcoin, allows to query all unspent transactions to that address, default: false
+  bool only_unspent = 5;
 }
 
 message AddressTxResponse {
   ChainRef blockchain = 1;
   SingleAddress address = 2;
-  google.protobuf.UInt32Value xpub_index = 3; // index of address in xpub if xpub has been requested (optional)
+  // index of address in xpub if xpub has been requested (optional)
+  google.protobuf.UInt32Value xpub_index = 3;
   string tx_id = 4;
   BlockInfo block = 5;
   bool mempool = 6;
   // N/A for mempool and last blocks (unconfirmed)
-  string cursor = 7; // block height + tx index
-
-  bool removed = 8; // true if transaction is removed from blockchain
+  string cursor = 7;
+  // true if transaction is removed from blockchain
+  bool removed = 8;
 
   repeated Transfer transfers = 9; // TODO: deprecated
-  bool failed = 10; // true if transaction is failed
+  // true if transaction is failed
+  bool failed = 10;
   repeated Change changes = 11;
 }
 
 message Change {
-  Direction direction = 1; // RECEIVE or SEND
-  SingleAddress address = 2; // Change address, could be empty
-  string amount = 3; // unsigned amount
+  Direction direction = 1;
+  // Change address, could be empty
+  SingleAddress address = 2;
+  // unsigned amount
+  string amount = 3;
   ChangeType type = 4;
-  SingleAddress contract_address = 5; // e.g. ERC-20 token address, optional, empty for blockchain native token
-  google.protobuf.UInt32Value xpub_index = 6; // index of address in xpub if detected (optional)
+  // e.g. ERC-20 token address, optional, empty for blockchain native token
+  SingleAddress contract_address = 5;
+  // index of address in xpub if detected (optional)
+  google.protobuf.UInt32Value xpub_index = 6;
 }
 
 message AddressTokenRequest {
   ChainRef blockchain = 1;
   AnyAddress address = 2;
 
-  repeated SingleAddress contract_addresses = 3; // contract addresses filter, no filter if empty
+  // contract addresses filter, no filter if empty
+  repeated SingleAddress contract_addresses = 3;
 }
 
 message AddressTokenResponse {
   ChainRef blockchain = 1;
   SingleAddress address = 2;
 
-  repeated SingleAddress contract_addresses = 3; // ERC-20 token addresses
+  // ERC-20 token addresses
+  repeated SingleAddress contract_addresses = 3;
 }
 
 message AddressAllowanceRequest {
   ChainRef blockchain = 1;
   AnyAddress address = 2;
 
-  repeated SingleAddress contract_addresses = 3; // contract addresses filter, no filter if empty
+  // contract addresses filter, no filter if empty
+  repeated SingleAddress contract_addresses = 3;
 }
 
 message AddressAllowanceResponse {
   ChainRef blockchain = 1;
   SingleAddress address = 2;
 
-  repeated SingleAddress approved_for_address = 3; // ERC-20 token addresses
-  repeated SingleAddress approved_by_address = 4; // ERC-20 token addresses
+  // ERC-20 token addresses
+  repeated SingleAddress approved_for_address = 3;
+  // ERC-20 token addresses
+  repeated SingleAddress approved_by_address = 4;
 }
 
 // TODO: deprecated
