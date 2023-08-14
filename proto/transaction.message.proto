@@ -73,6 +73,8 @@ message AddressTxResponse {
   // true if transaction is failed
   bool failed = 10;
   repeated Change changes = 11;
+  // transaction index in block
+  uint32 tx_index_in_block = 12;
 }
 
 message Change {
