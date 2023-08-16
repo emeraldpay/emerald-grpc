@@ -277,11 +277,11 @@ enum FeeEstimationMode {
     INVALID = 0;
     // Average over last transaction in each block
     AVG_LAST = 1;
-    // Average over transaction 5th from the end in each block
+    // Average over transaction at position 5 from the end in each block
     AVG_T5 = 2;
-    // Average over transaction 20th from the end in each block
+    // Average over transaction at position 20 from the end in each block
     AVG_T20 = 3;
-    // Average over transaction 50th from the end in each block
+    // Average over transaction at position 50 from the end in each block
     AVG_T50 = 4;
     // Minimal fee that would be accepted by every last block
     MIN_ALWAYS = 5;
@@ -289,6 +289,12 @@ enum FeeEstimationMode {
     AVG_MIDDLE = 6;
     // Average over transaction in head of each block. Note that for Bitcoin it doesn't count COINBASE tx as top tx.
     AVG_TOP = 7;
+    // Average over transaction at position 5 from the head in each block
+    AVG_H5 = 8;
+    // Average over transaction at position 10 from the head in each block
+    AVG_H10 = 9;
+    // Average over transaction at position 20 from the head in each block
+    AVG_H20 = 10;
 }
 
 /**
