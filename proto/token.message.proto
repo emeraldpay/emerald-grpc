@@ -4,7 +4,7 @@ option java_package = "io.emeraldpay.api.proto.token";
 import "common.proto";
 
 message AddressTokenRequest {
-  ChainRef blockchain = 1;
+  ChainRef chain = 1;
   AnyAddress address = 2;
 
   // contract addresses filter, no filter if empty
@@ -12,7 +12,7 @@ message AddressTokenRequest {
 }
 
 message AddressAllowanceRequest {
-  ChainRef blockchain = 1;
+  ChainRef chain = 1;
   AnyAddress address = 2;
 
   // contract addresses filter, no filter if empty
@@ -20,7 +20,7 @@ message AddressAllowanceRequest {
 }
 
 message AddressToken {
-  ChainRef blockchain = 1;
+  ChainRef chain = 1;
   SingleAddress address = 2;
 
   // ERC-20 token addresses
@@ -28,7 +28,7 @@ message AddressToken {
 }
 
 message AddressAllowanceToken {
-  ChainRef blockchain = 1;
+  ChainRef chain = 1;
   SingleAddress address = 2;
 
   // ERC-20 token addresses
