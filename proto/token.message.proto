@@ -17,6 +17,8 @@ message AddressAllowanceRequest {
 
   // contract addresses filter, no filter if empty
   repeated SingleAddress contract_addresses = 3;
+  // optional cursor to respond from
+  string cursor = 4;
 }
 
 message AddressToken {
@@ -46,4 +48,5 @@ message AddressAllowanceAmount {
   SingleAddress spender_address = 5;
   string allowance = 6;
   string available = 7; // minOf(owner_balance, allowance)
+  string cursor = 8;
 }
