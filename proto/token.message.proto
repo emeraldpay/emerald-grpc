@@ -19,6 +19,8 @@ message AddressAllowanceRequest {
   repeated SingleAddress contract_addresses = 3;
   // optional cursor to respond from
   string cursor = 4;
+  // optional response count limit
+  uint32 limit = 5;
 }
 
 message AddressToken {
