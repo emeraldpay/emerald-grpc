@@ -1,0 +1,54 @@
+syntax = "proto3";
+package emerald.token;
+option java_package = "io.emeraldpay.api.proto.token";
+import "common.proto";
+
+message AddressTokenRequest {
+  ChainRef chain = 1;
+  AnyAddress address = 2;
+
+  // contract addresses filter, no filter if empty
+  repeated SingleAddress contract_addresses = 3;
+}
+
+message AddressAllowanceRequest {
+  ChainRef chain = 1;
+  AnyAddress address = 2;
+
+  // contract addresses filter, no filter if empty
+  repeated SingleAddress contract_addresses = 3;
+  // optional cursor to respond from
+  string cursor = 4;
+  // optional response count limit
+  uint32 limit = 5;
+}
+
+message AddressToken {
+  ChainRef chain = 1;
+  SingleAddress address = 2;
+
+  // ERC-20 token addresses
+  repeated SingleAddress contract_addresses = 3;
+}
+
+message AddressAllowanceToken {
+  ChainRef chain = 1;
+  SingleAddress address = 2;
+
+  // ERC-20 token addresses
+  repeated SingleAddress approved_for_address = 3;
+  // ERC-20 token addresses
+  repeated SingleAddress approved_by_address = 4;
+}
+
+message AddressAllowanceAmount {
+  ChainRef chain = 1;
+  SingleAddress address = 2;
+
+  SingleAddress contract_address = 3;
+  SingleAddress owner_address = 4;
+  SingleAddress spender_address = 5;
+  string allowance = 6;
+  string available = 7; // minOf(owner_balance, allowance)
+  string cursor = 8;
+}

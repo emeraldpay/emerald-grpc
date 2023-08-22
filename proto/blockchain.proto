@@ -10,7 +10,9 @@ service Blockchain {
 
     rpc GetBalance (BalanceRequest) returns (stream AddressBalance) {}
 
+    // DEPRECATED, moved to token service
     rpc GetAddressAllowance(AddressAllowanceRequest) returns (stream AddressAllowance) {}
+    // DEPRECATED, moved to token service
     rpc SubscribeAddressAllowance(AddressAllowanceRequest) returns (stream AddressAllowance) {}
 
     /**
