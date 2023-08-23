@@ -5,10 +5,10 @@ import "token.message.proto";
 
 service Token {
 
-  rpc GetTokens (token.AddressTokenRequest) returns (stream token.AddressToken) {}
-  rpc SubscribeTokens (token.AddressTokenRequest) returns (stream token.AddressToken) {}
+  rpc GetTokens(token.AddressTokenRequest) returns (token.AddressToken) {}
+  rpc SubscribeTokens(token.AddressTokenRequest) returns (stream token.AddressToken) {}
 
-  rpc GetAllowanceTokens(token.AddressAllowanceRequest) returns (stream token.AddressAllowanceToken) {}
+  rpc GetAllowanceTokens(token.AddressAllowanceRequest) returns (token.AddressAllowanceToken) {}
   rpc SubscribeAllowanceTokens(token.AddressAllowanceRequest) returns (stream token.AddressAllowanceToken) {}
 
   rpc GetAllowanceAmounts(token.AddressAllowanceRequest) returns (stream token.AddressAllowanceAmount) {}
