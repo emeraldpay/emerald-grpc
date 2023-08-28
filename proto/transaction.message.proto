@@ -77,6 +77,43 @@ message AddressTxResponse {
   uint32 tx_index_in_block = 12;
 }
 
+message GetTransactionsRequest {
+  ChainRef chain = 1;
+  AnyAddress address = 2;
+  // optional cursor to start respond from
+  string cursor = 3;
+  // optional response count limit
+  uint32 limit = 4;
+
+  // For Bitcoin, allows to query all unspent transactions to that address, default: false
+  bool unspent_only = 5;
+}
+
+message SubscribeTransactionsRequest {
+  ChainRef chain = 1;
+  AnyAddress address = 2;
+}
+
+message AddressTransaction {
+  ChainRef chain = 1;
+  SingleAddress address = 2;
+  // index of address in xpub if xpub has been requested (optional)
+  google.protobuf.UInt32Value xpub_index = 3;
+  string tx_id = 4;
+  BlockInfo block = 5;
+  bool mempool = 6;
+  // N/A for mempool and last blocks (unconfirmed)
+  string cursor = 7;
+  // true if transaction is removed from blockchain mempool
+  bool removed = 8;
+  // true if transaction is failed
+  bool failed = 10;
+  // all changes in transaction
+  repeated Change changes = 11;
+  // transaction index in block
+  uint32 tx_index_in_block = 12;
+}
+
 message Change {
   Direction direction = 1;
   // Change address, could be empty

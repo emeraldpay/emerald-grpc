@@ -7,6 +7,13 @@ service Transaction {
   rpc GetBalance (transaction.BalanceRequest) returns (stream transaction.BalanceResponse) {}
   rpc GetXpubState (transaction.XpubStateRequest) returns (transaction.XpubState) {}
 
+  // DEPRECATED, replaced by GetTransactions
   rpc GetAddressTx (transaction.AddressTxRequest) returns (stream transaction.AddressTxResponse) {}
+  // DEPRECATED, replaced by SubscribeTransactions
   rpc SubscribeAddressTx (transaction.AddressTxRequest) returns (stream transaction.AddressTxResponse) {}
+
+  // Get transaction for address
+  rpc GetTransactions (transaction.GetTransactionsRequest) returns (stream transaction.AddressTransaction) {}
+  // Subscribe to new transactions in blocks and all transaction in mempool for address
+  rpc SubscribeTransactions (transaction.SubscribeTransactionsRequest) returns (stream transaction.AddressTransaction) {}
 }
