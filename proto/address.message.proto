@@ -2,6 +2,7 @@ syntax = "proto3";
 package emerald.address;
 option java_package = "io.emeraldpay.api.proto.address";
 import "common.proto";
+import "google/protobuf/wrappers.proto";
 
 message DescribeRequest {
   ChainRef chain = 1;
@@ -32,4 +33,19 @@ enum AddressCapability {
   CAP_INVALID = 0;
   // Contract is a ERC20 token
   CAP_ERC20 = 1;
+}
+
+message DescribeXpubRequest {
+  ChainRef chain = 1;
+  XpubAddress address = 2;
+}
+
+message DescribeXpubResponse {
+  ChainRef chain = 1;
+  // requested address
+  XpubAddress address = 2;
+  // last used address
+  SingleAddress last_address = 3;
+  // last used index
+  google.protobuf.UInt32Value last_index = 4;
 }

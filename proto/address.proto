@@ -6,5 +6,7 @@ import "address.message.proto";
 service Address {
   // Describe an address status
   rpc Describe (address.DescribeRequest) returns (address.DescribeResponse) {}
+  // Describe an xpub address status
+  rpc DescribeXpub (address.DescribeXpubRequest) returns (address.DescribeXpubResponse) {}
 }
 
