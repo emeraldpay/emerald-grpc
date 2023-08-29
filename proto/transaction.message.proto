@@ -21,20 +21,6 @@ message AddressAmount {
   string amount = 2;
 }
 
-message XpubStateRequest {
-  ChainRef blockchain = 1;
-  XpubAddress address = 2;
-}
-
-message XpubState {
-  ChainRef blockchain = 1;
-  XpubAddress address = 2;
-  // last used address
-  SingleAddress last_address = 3;
-  // last used index
-  google.protobuf.UInt32Value last_index = 4;
-}
-
 message AddressTxRequest {
   ChainRef blockchain = 1;
   AnyAddress address = 2;

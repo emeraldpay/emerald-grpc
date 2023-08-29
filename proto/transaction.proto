@@ -4,7 +4,6 @@ option java_package = "io.emeraldpay.api.proto";
 import "transaction.message.proto";
 
 service Transaction {
-  rpc GetXpubState (transaction.XpubStateRequest) returns (transaction.XpubState) {}
 
   // DEPRECATED, replaced by GetTransactions
   rpc GetAddressTx (transaction.AddressTxRequest) returns (stream transaction.AddressTxResponse) {}
