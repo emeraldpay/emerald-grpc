@@ -35,17 +35,6 @@ message XpubState {
   google.protobuf.UInt32Value last_index = 4;
 }
 
-message BalanceRequest {
-  Asset asset = 1;
-  AnyAddress address = 2;
-}
-
-message BalanceResponse {
-  Asset asset = 1;
-  repeated SingleAddress address = 2;
-  string balance = 3;
-}
-
 message AddressTxRequest {
   ChainRef blockchain = 1;
   AnyAddress address = 2;
