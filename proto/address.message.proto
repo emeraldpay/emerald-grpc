@@ -15,18 +15,18 @@ message DescribeResponse {
   // TBD
   bool active = 2;
   // How the address is controlled
-  AddrControl control = 3;
+  AddressControl control = 3;
   // For a contract, which capabilities it has
   repeated AddressCapability capabilities = 4;
+}
 
-  enum AddrControl {
-    // When there is no information about the address control, ex. address never used
-    CTRL_UNKNOWN = 0;
-    // Controller by a Private Key
-    CTRL_PERSON = 1;
-    // Controller by a Contract
-    CTRL_CONTRACT = 2;
-  }
+enum AddressControl {
+  // When there is no information about the address control, ex. address never used
+  CTRL_UNKNOWN = 0;
+  // Controller by a Private Key
+  CTRL_PERSON = 1;
+  // Controller by a Contract
+  CTRL_CONTRACT = 2;
 }
 
 enum AddressCapability {
