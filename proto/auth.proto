@@ -12,25 +12,37 @@ message AuthRequest {
     repeated string capabilities = 2;
     repeated string scopes = 3;
     oneof auth_type {
+        // DEPRECATED
         TempAuth temp_auth = 4;
+        string auth_secret = 5;
     }
 }
 
+// DEPRECATED
 message TempAuth {
     string id = 1;
 }
 
 message AuthResponse {
-    bool succeed = 1;
+    // if denied, is the code of the error, similar to HTTP error codes structure, i.e., 4xx/5xx
+    // zero if succeed
     uint32 deny_code = 2;
+    // (optional) a human readable message for the error
     string deny_message = 3;
 
-    string token = 10;
-    string secret = 11;
-    uint64 expire = 12;
-    string type = 13; //ex. JWT_RS256, NONCE-HMAC_SHA256
+    // access token to be used for further requests
+    string access_token = 10;
+    // token used to receive an updated access token when the current one has expired
+    string refresh_token = 11;
+    // when the access token expires
+    uint64 expires_at = 12;
+    // type of the access token, ex. JWT_RS256
+    string type = 13;
 }
 
 message RefreshRequest {
-    string token = 1;
+    // original secret token used to authenticate for this refresh token
+    string auth_secret = 1;
+    // refresh token
+    string refresh_token = 2;
 }
