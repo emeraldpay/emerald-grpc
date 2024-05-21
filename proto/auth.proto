@@ -24,9 +24,11 @@ message TempAuth {
 }
 
 message AuthResponse {
+    // DEPRECATED, check `status` instead
+    bool succeed = 1;
     // if denied, is the code of the error, similar to HTTP error codes structure, i.e., 4xx/5xx
     // zero if succeed
-    uint32 deny_code = 2;
+    uint32 status = 2;
     // (optional) a human readable message for the error
     string deny_message = 3;
 
