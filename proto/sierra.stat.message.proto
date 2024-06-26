@@ -1,0 +1,62 @@
+syntax = "proto3";
+package emerald.sierra.stat;
+option java_package = "io.emeraldpay.sierra.proto.stat";
+
+enum Granularity {
+  GRANULARITY_UNSPECIFIED = 0;
+  GRANULARITY_SECOND = 1;
+  GRANULARITY_MINUTE = 2;
+  GRANULARITY_HOUR = 3;
+  GRANULARITY_DAY = 4;
+  GRANULARITY_WEEK = 5;
+  GRANULARITY_MONTH = 6;
+}
+
+enum GroupBy {
+  GROUP_BY_UNSPECIFIED = 0;
+  GROUP_BY_SERVICE = 1;
+  GROUP_BY_PROJECT = 2;
+}
+
+message GetRequestCountRequest {
+  string org_id = 1;
+  // milliseconds since epoch, inclusive
+  uint64 timestamp_from = 2;
+  // milliseconds since epoch, inclusive
+  uint64 timestamp_to = 3;
+  // service filter, empty means all services
+  repeated string services = 4;
+  // project filter, empty means all projects
+  repeated string project_ids = 5;
+  Granularity granularity = 6;
+  GroupBy group_by = 7;
+}
+
+message RequestCount {
+  // milliseconds since epoch, beginning of the period depending on precision
+  uint64 timestamp = 1;
+  // request count for the period
+  uint64 count = 2;
+}
+
+message GroupRequestCount {
+  // group value, either project_id or service depending on group_by in the request
+  oneof group {
+    string project_id = 1;
+    string service = 2;
+  }
+  // request counts for the requested period, split according to precision, including zero values
+  repeated RequestCount counts = 3;
+}
+
+message GetTokenStatRequest {
+  string org_id = 1;
+  // token filter, empty means all tokens
+  repeated string token_ids = 2;
+}
+
+message TokenStat {
+  string token_id = 1;
+  // milliseconds since epoch UTC
+  uint64 last_timestamp = 2;
+}
