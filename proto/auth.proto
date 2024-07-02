@@ -3,8 +3,17 @@ package emerald;
 option java_package = "io.emeraldpay.api.proto";
 
 service Auth {
+    // Get a JWT token to be used for further requests
     rpc Authenticate (AuthRequest) returns (AuthResponse) {}
+
+    // Refresh an expired JWT token
     rpc Refresh(RefreshRequest) returns (AuthResponse) {}
+
+    // Get the details about the current authentication
+    rpc WhoAmI(WhoAmIRequest) returns (WhoAmIResponse) {}
+
+    // List all tokens for the requests organization
+    rpc ListTokens(ListTokensRequest) returns (ListTokensResponse) {}
 }
 
 message AuthRequest {
@@ -47,4 +56,32 @@ message RefreshRequest {
     string auth_secret = 1;
     // refresh token
     string refresh_token = 2;
+}
+
+message WhoAmIRequest {
+}
+
+message WhoAmIResponse {
+    bool is_authenticated = 1;
+    // (only if authenticated) id of the original token used for authentication
+    string token_id = 2;
+}
+
+message ListTokensRequest {
+    // (required) filter by organization
+    string organization_id = 1;
+    // (optional) filter by project
+    string project_id = 2;
+}
+
+message ListTokensResponse {
+    repeated TokenDetails tokens = 1;
+}
+
+message TokenDetails {
+    string organization_id = 1;
+    string project_id = 2;
+    string token_id = 3;
+    // when the token was created
+    uint64 creation_date = 4;
 }
