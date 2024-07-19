@@ -9,6 +9,9 @@ service Auth {
     // Refresh an expired JWT token
     rpc Refresh(RefreshRequest) returns (AuthResponse) {}
 
+    // Issue a new secret token (based on the current authentication)
+    rpc IssueToken(IssueTokenRequest) returns (IssuedTokenResponse) {}
+
     // Get the details about the current authentication
     rpc WhoAmI(WhoAmIRequest) returns (WhoAmIResponse) {}
 
@@ -65,6 +68,8 @@ message WhoAmIResponse {
     bool is_authenticated = 1;
     // (only if authenticated) id of the original token used for authentication
     string token_id = 2;
+    // (only if authenticated) current user id. may be null if the authentication was not associated with a user
+    string user_id = 3;
 }
 
 message ListTokensRequest {
@@ -84,4 +89,32 @@ message TokenDetails {
     string token_id = 3;
     // when the token was created
     uint64 creation_date = 4;
+}
+
+message IssueTokenRequest {
+    TokenType type = 1;
+    // (optional) the scopes to be used for the token. Cannot be larger that the current authenticated scopes.
+    repeated string scopes = 2;
+    // (optional) the user id associated with the token, i.e. who will use the token.
+    // There are restrictions who can set this. In short the token issuer must be in control of the user / impersonate the user.
+    string user_id = 3;
+    // (optional) a timestamp (millis since epoch) when it expires.
+    // For a temp token, by default, it's 1 Day and cannot be more than 30 days.
+    // For other tokens it never expires.
+    uint64 expire_at = 4;
+
+    enum TokenType {
+        // a one-time token that is valid for a short period of time
+        TEMP = 0;
+        // a token that is valid for a long period of time
+        // PERMANENT = 1;
+    }
+}
+
+message IssuedTokenResponse {
+    // the token to authenticate with
+    string auth_secret = 1;
+    // when the access token expires (millis since epoch)
+    // 0 (zero) if never expires
+    uint64 expires_at = 2;
 }
