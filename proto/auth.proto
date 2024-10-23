@@ -89,6 +89,8 @@ message TokenDetails {
     string token_id = 3;
     // when the token was created
     uint64 creation_date = 4;
+    // a user specified description of the token
+    string description = 5;
 }
 
 message IssueTokenRequest {
