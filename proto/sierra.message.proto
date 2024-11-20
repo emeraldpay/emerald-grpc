@@ -1,6 +1,43 @@
 syntax = "proto3";
-package emerald.sierra.stat;
-option java_package = "io.emeraldpay.sierra.proto.stat";
+package emerald.sierra.message;
+option java_package = "io.emeraldpay.sierra.proto.message";
+
+message Project {
+  string org_id = 1;
+  string project_id = 2;
+  string name = 3;
+  string description = 4;
+  // milliseconds since epoch
+  uint64 created_at = 5;
+}
+
+message Org {
+  string org_id = 1;
+  string name = 3;
+  string description = 4;
+  // milliseconds since epoch
+  uint64 created_at = 5;
+}
+
+message CreateProjectRequest {
+  string org_id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message CreateProjectResponse {
+  string project_id = 1;
+}
+
+message ListProjectsRequest {
+  string org_id = 1;
+  // project filter, empty means all projects
+  repeated string project_ids = 2;
+}
+
+message GetOrgRequest {
+  string org_id = 1;
+}
 
 enum Granularity {
   GRANULARITY_UNSPECIFIED = 0;
@@ -10,6 +47,8 @@ enum Granularity {
   GRANULARITY_DAY = 4;
   GRANULARITY_WEEK = 5;
   GRANULARITY_MONTH = 6;
+  GRANULARITY_5_MINUTES = 7;
+  GRANULARITY_15_MINUTES = 8;
 }
 
 enum GroupBy {

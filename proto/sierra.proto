@@ -1,0 +1,19 @@
+syntax = "proto3";
+package emerald.sierra;
+option java_package = "io.emeraldpay.sierra.proto";
+
+import "sierra.message.proto";
+
+service Project {
+  rpc CreateProject(message.CreateProjectRequest) returns (message.Project) {}
+  rpc ListProjects(message.ListProjectsRequest) returns (stream message.Project) {}
+}
+
+service Org {
+  rpc GetOrg(message.GetOrgRequest) returns (message.Org) {}
+}
+
+service Stat {
+  rpc GetRequestCount(message.GetRequestCountRequest) returns (stream message.GroupRequestCount) {}
+  rpc GetTokenStat(message.GetTokenStatRequest) returns (stream message.TokenStat) {}
+}

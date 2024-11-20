@@ -1,9 +1,0 @@
-syntax = "proto3";
-package emerald.sierra;
-option java_package = "io.emeraldpay.sierra.proto";
-import "sierra.stat.message.proto";
-
-service Stat {
-  rpc GetRequestCount (stat.GetRequestCountRequest) returns (stream stat.GroupRequestCount) {}
-  rpc GetTokenStat (stat.GetTokenStatRequest) returns (stream stat.TokenStat) {}
-}
