@@ -105,11 +105,19 @@ message IssueTokenRequest {
     // For other tokens it never expires.
     uint64 expire_at = 4;
 
+    // (for a permanent token) organization id for the token
+    string organization_id = 5;
+    // (for a permanent token) project id for the token
+    string project_id = 6;
+    // (for a permanent token) description of the token
+    string description = 7;
+
     enum TokenType {
-        // a one-time token that is valid for a short period of time
+        // a one-time token that is valid for a short period of time, just a reference to the current token for one time and exclusive session but may be limited by time, scope, etc.
+        // expires after first use.
         TEMP = 0;
-        // a token that is valid for a long period of time
-        // PERMANENT = 1;
+        // a token that is valid for a long period of time, multiple sessions and associated with a project for stats and billing
+        PERMANENT = 1;
     }
 }
 
