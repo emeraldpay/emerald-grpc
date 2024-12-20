@@ -17,6 +17,9 @@ service Auth {
 
     // List all tokens for the requests organization
     rpc ListTokens(ListTokensRequest) returns (ListTokensResponse) {}
+
+    // Delete token
+    rpc DeleteToken(DeleteTokenRequest) returns (DeleteTokenResponse) {}
 }
 
 message AuthRequest {
@@ -127,4 +130,14 @@ message IssuedTokenResponse {
     // when the access token expires (millis since epoch)
     // 0 (zero) if never expires
     uint64 expires_at = 2;
+}
+
+message DeleteTokenRequest {
+    string organization_id = 1;
+    string project_id = 2;
+    string token_id = 3;
+
+}
+
+message DeleteTokenResponse {
 }
