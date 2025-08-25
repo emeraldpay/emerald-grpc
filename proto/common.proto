@@ -6,33 +6,58 @@ message Chain {
     ChainRef type = 1;
 }
 
+/**
+ * Defines standard chain references used across Emerald APIs.
+ *
+ * The numbering scheme is as follows:
+ * - Bitcoin starts with 1
+ * - Ethereum starts with 100
+ * - Sidechains and state channels start with 1_000
+ * - All Testnets start with 10_000
+ * - Non-standard chains start with 20_000
+ */
 enum ChainRef {
     CHAIN_UNSPECIFIED = 0;
 
     CHAIN_BITCOIN = 1;
-    // CHAIN_GRIN = 2;
 
     CHAIN_ETHEREUM = 100;
     CHAIN_ETHEREUM_CLASSIC = 101;
-    CHAIN_FANTOM = 102; // Fantom, https://fantom.foundation/
 
-    // Sidechains and state channels start with 1_000
-    // CHAIN_LIGHTNING = 1001;
-    CHAIN_MATIC = 1002; // Matic PoS Ethereum sidechain based on Polygon
-    CHAIN_RSK = 1003; // RSK sidechain, https://www.rsk.co/
+    // Fantom, https://fantom.foundation/
+    CHAIN_FANTOM = 102;
 
-    // Testnets start with 10_000
+    // Matic PoS Ethereum sidechain based on Polygon
+    CHAIN_MATIC = 1002;
+    // RSK sidechain, https://www.rsk.co/
+    CHAIN_RSK = 1003;
+
+    // DEPRECATED
     CHAIN_MORDEN = 10001;
+    // DEPRECATED
     CHAIN_KOVAN = 10002;
+
+    // DEPRECATED, use CHAIN_TESTNET_BITCOIN_4 instead
     CHAIN_TESTNET_BITCOIN = 10003;
-    // CHAIN_FLOONET = 10004;
+    // https://bips.dev/94/
+    CHAIN_TESTNET_BITCOIN_4 = 10004;
+
+    // DEPRECATED, use CHAIN_SEPOLIA instead
     CHAIN_GOERLI = 10005;
+    // DEPRECATED, use CHAIN_HOLESKY instead
     CHAIN_ROPSTEN = 10006;
+    // DEPRECATED, use CHAIN_SEPOLIA instead
     CHAIN_RINKEBY = 10007;
+    // DEPRECATED, use CHAIN_HOODI instead
     CHAIN_HOLESKY = 10008;
+
+    ///
+    /// https://github.com/eth-clients/sepolia
     CHAIN_SEPOLIA = 10009;
 
-    // Non-standard starts from 20_000
+    /// replaces HOLESKY,
+    /// https://github.com/eth-clients/hoodi
+    CHAIN_HOODI = 10010;
 }
 
 message SingleAddress {
