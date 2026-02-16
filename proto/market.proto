@@ -8,7 +8,13 @@ service Market {
 }
 
 message GetRatesRequest {
-    repeated Pair pairs = 2;
+  repeated Pair pairs = 2;
+  oneof timestamp_type {
+    // timestamp in milliseconds, 0 for latest rate
+    uint64 timestamp = 3;
+    // reference to a block by height or hash
+    BlockRef block = 4;
+  }
 }
 
 message Pair {
@@ -24,6 +30,8 @@ message Pair {
 
 message GetRatesResponse {
     repeated Rate rates = 1;
+    // timestamp in milliseconds
+    uint64 timestamp = 4;
 }
 
 message Rate {
@@ -38,3 +46,10 @@ message Rate {
     string rate = 3;
 }
 
+message BlockRef {
+  ChainRef blockchain = 1;
+  oneof ref_type {
+    uint64 height = 2;
+    string hash = 3;
+  }
+}
