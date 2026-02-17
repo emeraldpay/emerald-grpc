@@ -3,11 +3,15 @@ package emerald;
 option java_package = "io.emeraldpay.api.proto";
 import "common.proto";
 
+service Market {
+    rpc GetRates (GetRatesRequest) returns (GetRatesResponse) {}
+}
+
 message GetRatesRequest {
     repeated Pair pairs = 2;
     // get rates at a specific timestamp/block timestamp, if not set - get current rates
     oneof at_ref_type {
-        // timestamp in milliseconds
+        // timestamp in milliseconds since epoch (UTC)
         uint64 timestamp = 3;
         // reference to a block
         BlockRef block = 4;
@@ -39,6 +43,6 @@ message Rate {
         Erc20Asset erc20_target = 5;
     }
     string rate = 3;
-    // rate timestamp in milliseconds
+    // rate timestamp in milliseconds since epoch (UTC)
     uint64 timestamp = 6;
 }
