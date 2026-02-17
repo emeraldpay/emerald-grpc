@@ -104,3 +104,12 @@ message BlockInfo {
     string block_id = 2;
     uint64 timestamp = 3;
 }
+
+message BlockRef {
+    ChainRef blockchain = 1;
+    oneof ref_type {
+        uint64 height = 2;
+        // block hash
+        string block_id = 3;
+    }
+}
