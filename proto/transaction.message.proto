@@ -59,9 +59,11 @@ message GetTransactionsRequest {
   string cursor = 3;
   // optional response count limit
   uint32 limit = 4;
-
   // For Bitcoin, allows to query all unspent transactions to that address, default: false
   bool unspent_only = 5;
+  // Get transactions is Descending order, i.e., start from the newest and go backwards.
+  // Default: false (i.e., Ascending, from oldest to newest)
+  bool descending = 6;
 }
 
 message SubscribeTransactionsRequest {
