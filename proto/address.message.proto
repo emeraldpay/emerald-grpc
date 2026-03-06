@@ -18,6 +18,8 @@ message DescribeResponse {
   AddressControl control = 3;
   // For a contract, which capabilities it has
   repeated AddressCapability capabilities = 4;
+  // Names associated with the address, e.g. a ENS name
+  repeated AddressName names = 5;
 }
 
 enum AddressControl {
@@ -33,6 +35,19 @@ enum AddressCapability {
   CAP_INVALID = 0;
   // Contract is a ERC20 token
   CAP_ERC20 = 1;
+}
+
+message AddressName {
+  NameRegistry registry = 1;
+  string name = 2;
+}
+
+enum NameRegistry {
+  // An error or corrupted response
+  NAME_REPO_UNKNOWN = 0;
+
+  // ENS registry on the requested blockchain
+  NAME_REPO_ENS = 1;
 }
 
 message DescribeXpubRequest {
