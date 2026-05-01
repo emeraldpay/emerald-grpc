@@ -54,7 +54,7 @@ message GetRateSeriesRequest {
     Granularity granularity = 2;
     // timestamp in milliseconds since epoch (UTC) inclusive (required)
     uint64 from_timestamp = 3;
-    // timestamp in milliseconds since epoch (UTC) inclusive (default: now)
+    // timestamp in milliseconds since epoch (UTC) inclusive (0 means current time)
     uint64 to_timestamp = 4;
 }
 
