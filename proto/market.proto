@@ -5,6 +5,7 @@ import "common.proto";
 
 service Market {
     rpc GetRates (GetRatesRequest) returns (GetRatesResponse) {}
+    rpc GetRateSeries (GetRateSeriesRequest) returns (GetRateSeriesResponse) {}
 }
 
 message GetRatesRequest {
@@ -45,4 +46,37 @@ message Rate {
     string rate = 3;
     // rate timestamp in milliseconds since epoch (UTC)
     uint64 timestamp = 6;
+}
+
+message GetRateSeriesRequest {
+    Pair pair = 1;
+    // rate granularity, e.g. 1 minute, 1 hour, etc. (required)
+    Granularity granularity = 2;
+    // timestamp in milliseconds since epoch (UTC) inclusive (required)
+    uint64 from_timestamp = 3;
+    // timestamp in milliseconds since epoch (UTC) inclusive (default: now)
+    uint64 to_timestamp = 4;
+}
+
+enum Granularity {
+    GRANULARITY_UNSPECIFIED = 0;
+    GRANULARITY_SECOND = 1;
+    GRANULARITY_MINUTE = 2;
+    GRANULARITY_FIVE_MINUTES = 3;
+    GRANULARITY_FIFTEEN_MINUTES = 4;
+    GRANULARITY_HOUR = 5;
+    GRANULARITY_DAY = 6;
+    GRANULARITY_WEEK = 7;
+}
+
+message GetRateSeriesResponse {
+    Pair pair = 1;
+    repeated RateAt rates = 2;
+}
+
+message RateAt {
+    // rate as a string to preserve precision, e.g. "0.000000000000000001"
+    string rate = 1;
+    // rate timestamp in milliseconds since epoch (UTC)
+    uint64 timestamp = 2;
 }
