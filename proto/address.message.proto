@@ -12,23 +12,14 @@ message DescribeRequest {
 message DescribeResponse {
   // The requested address
   SingleAddress address = 1;
-  // TBD
+  // True if anything was sent from the address
   bool active = 2;
-  // How the address is controlled
-  AddressControl control = 3;
+  // True if address is a contract
+  bool is_contract = 6;
   // For a contract, which capabilities it has
   repeated AddressCapability capabilities = 4;
   // Names associated with the address, e.g. a ENS name
   repeated AddressName names = 5;
-}
-
-enum AddressControl {
-  // When there is no information about the address control, ex. address never used
-  CTRL_UNKNOWN = 0;
-  // Controller by a Private Key
-  CTRL_PERSON = 1;
-  // Controller by a Contract
-  CTRL_CONTRACT = 2;
 }
 
 enum AddressCapability {
