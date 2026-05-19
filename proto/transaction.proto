@@ -14,4 +14,8 @@ service Transaction {
   rpc GetTransactions (transaction.GetTransactionsRequest) returns (stream transaction.AddressTransaction) {}
   // Subscribe to new transactions in blocks and all transaction in mempool for address
   rpc SubscribeTransactions (transaction.SubscribeTransactionsRequest) returns (stream transaction.AddressTransaction) {}
+
+  // Get transaction by txId
+  rpc GetTransaction (transaction.GetTransactionRequest) returns (transaction.Transaction) {}
+
 }
