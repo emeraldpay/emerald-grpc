@@ -103,3 +103,23 @@ message Change {
   // index of address in xpub if detected (optional)
   google.protobuf.UInt32Value xpub_index = 6;
 }
+
+message GetTransactionRequest {
+  ChainRef chain = 1;
+  string tx_id = 2;
+}
+
+message Transaction {
+  ChainRef chain = 1;
+  string tx_id = 2;
+  // block info if transaction is in block, empty for mempool transaction
+  BlockInfo block = 3;
+  // true if transaction is in mempool, false if transaction is in block
+  bool mempool = 4;
+  // transaction index in block
+  uint32 tx_index_in_block = 5;
+  // true if transaction is failed
+  bool failed = 6;
+  // all changes in transaction
+  repeated Change changes = 7;
+}
