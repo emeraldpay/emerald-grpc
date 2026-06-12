@@ -2,6 +2,9 @@ syntax = "proto3";
 package emerald;
 option java_package = "io.emeraldpay.api.proto";
 
+import "google/api/field_info.proto";
+import "google/api/field_behavior.proto";
+
 service Auth {
     // Get a JWT token to be used for further requests
     rpc Authenticate (AuthRequest) returns (AuthResponse) {}
@@ -68,11 +71,34 @@ message WhoAmIRequest {
 }
 
 message WhoAmIResponse {
-    bool is_authenticated = 1;
-    // (only if authenticated) id of the original token used for authentication
-    string token_id = 2;
-    // (only if authenticated) current user id. may be null if the authentication was not associated with a user
-    string user_id = 3;
+    bool is_authenticated = 1 [
+        (google.api.field_behavior) = REQUIRED
+    ];
+    // Id of the original token used for the authentication.
+    // Provided only if authenticated.
+    string token_id = 2 [
+        (google.api.field_behavior) = OPTIONAL,
+        (google.api.field_info).format = UUID4
+    ];
+    // The current User Id.
+    // May be null if the authentication was not associated with a user.
+    // Provided only if authenticated.
+    string user_id = 3 [
+        (google.api.field_behavior) = OPTIONAL,
+        (google.api.field_info).format = UUID4
+    ];
+    // Organization Id for current access.
+    // Provided only if authenticated with sierra:read+.
+    string organization_id = 4 [
+        (google.api.field_behavior) = OPTIONAL,
+        (google.api.field_info).format = UUID4
+    ];
+    // Project Id for current access.
+    // Provided only if authenticated with sierra:read+.
+    string project_id = 5 [
+        (google.api.field_behavior) = OPTIONAL,
+        (google.api.field_info).format = UUID4
+    ];
 }
 
 message ListTokensRequest {
