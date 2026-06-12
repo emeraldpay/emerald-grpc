@@ -2,6 +2,9 @@ syntax = "proto3";
 package emerald.sierra.message;
 option java_package = "io.emeraldpay.sierra.proto.message";
 
+import "google/api/field_info.proto";
+import "google/api/field_behavior.proto";
+
 message Project {
   string org_id = 1;
   string project_id = 2;
@@ -98,4 +101,120 @@ message TokenStat {
   string token_id = 1;
   // milliseconds since epoch UTC
   uint64 last_timestamp = 2;
+}
+
+// Get a sample of the current requests
+message GetLogsRequest {
+  // Organization filter
+  string org_id = 1
+  [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // Project filter. Empty means all the projects in the organization.
+  optional string project_id = 2
+  [
+    (google.api.field_behavior) = OPTIONAL,
+    (google.api.field_info).format = UUID4
+  ];
+  // Token filter optional. Empty means all tokens in the organization.
+  // When set the project_id is required.
+  optional string token_id = 3
+  [
+    (google.api.field_behavior) = OPTIONAL,
+    (google.api.field_info).format = UUID4
+  ];
+  // Service filter, empty means all services (after applying the previous filters).
+  // Example: `emerald.blockchain/NativeCall` or `emerald.blockchain` for all services in the `emerald.blockchain` namespace.
+  optional string service = 4
+  [
+    (google.api.field_behavior) = OPTIONAL
+  ];
+}
+
+// A partial log response, sent as soon an an event happened on the server.
+// Typically it consists of at least 3 parts: start -> message* -> close, but it can be less as some of the parts can be dropped for a larger request volume.
+message LogResponse {
+  // Request id, same for all parts of the same request
+  string request_id = 1
+  [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // Milliseconds since epoch UTC. The tiume when the event happened on the server
+  uint64 timestamp = 2
+  [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // The actual log part, can be start, message or close
+  LogResponsePart part = 3;
+}
+
+message LogResponsePart {
+
+  oneof kind {
+    // Sent at the beginning of the request, contains the basic info about the request
+    Start start = 1;
+    // Sent when a response send from the server.
+    Message message = 2;
+    // Sent when the request is finished
+    Close close = 3;
+  }
+
+  message Start {
+    // org_id in the request
+    string org_id = 1 [
+      (google.api.field_behavior) = REQUIRED,
+      (google.api.field_info).format = UUID4
+    ];
+    // project_id in the request
+    string project_id = 2 [
+      (google.api.field_behavior) = REQUIRED,
+      (google.api.field_info).format = UUID4
+    ];
+    // token_id in the request
+    string token_id = 3 [
+      (google.api.field_behavior) = REQUIRED,
+      (google.api.field_info).format = UUID4
+    ];
+    // Full service name, ex. "emerald.blockchain/NativeCall"
+    string service = 4 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+  }
+
+  message Message {
+    Status status = 1 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+    // Human-readable error description, set only when status is an error.
+    // Empty for OK.
+    optional string error_message = 2;
+    // Size of the response in bytes.
+    uint64 response_size = 3 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+  }
+
+  enum Status {
+    STATUS_OK = 0;
+    STATUS_DENIED = 1;
+    STATUS_ERROR = 2;
+  }
+
+  message Close {
+    // Total time of the request in milliseconds, from the start to the end of the request
+    uint64 total_time = 1 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+    // Total number of messages sent from the server for this request, without the start and close messages.
+    // May be zero if the request was dropped before processing or if there were no messages to send.
+    // For a simple request it's typically 1, for a streaming request it can be more than 1.
+    uint64 message_count = 2 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+    // The total size of the request in bytes.
+    uint64 request_size = 3 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+  }
 }

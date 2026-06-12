@@ -16,4 +16,11 @@ service Org {
 service Stat {
   rpc GetRequestCount(message.GetRequestCountRequest) returns (stream message.GroupRequestCount) {}
   rpc GetTokenStat(message.GetTokenStatRequest) returns (stream message.TokenStat) {}
+
+  // Subscribe to a sample of the current requests to the API.
+  // "Sample" means the response is rate limited.
+  // The sample usually contains all the messages before reaching "100 req/min" for the provided filter, but then drops the rest.
+  // May provide less that 100 req/min if the server is under heavy load.
+  // The sample is not guaranteed to be complete, but it should be representative of the current traffic for debugging.
+  rpc SubscribeLogs(message.GetLogsRequest) returns (stream message.LogResponse) {}
 }
