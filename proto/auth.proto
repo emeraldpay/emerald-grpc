@@ -146,6 +146,18 @@ message TokenDetails {
     ];
     // A user specified description of the token
     string description = 5;
+
+    // The host names that are checked against the Referer header.
+    // Any Referer is allowed when the list is empty.
+    repeated string require_origin = 6 [
+        (google.api.field_behavior) = OPTIONAL
+    ];
+
+    // List of IP addresses allowed to use the token. IPv4 or CIDR notation.
+    // Any address is allowed when the list is empty.
+    repeated string require_ip = 9 [
+        (google.api.field_behavior) = OPTIONAL
+    ];
 }
 
 message IssueTokenRequest {
@@ -157,25 +169,37 @@ message IssueTokenRequest {
     ];
     reserved 3;
 
-    // (optional) a timestamp (as millis since epoch) when it expires.
+    // (optional) A timestamp (as millis since epoch) when it expires.
     // For a temp token, by default, it's 1 Day and cannot be more than 30 days.
     // For other tokens it never expires.
     uint64 expire_at = 4  [
         (google.api.field_behavior) = OPTIONAL
     ];
 
-    // (for a permanent token) organization id for the token
+    // (for a permanent token) Organization id for the token
     string organization_id = 5 [
         (google.api.field_behavior) = OPTIONAL,
         (google.api.field_info).format = UUID4
     ];
-    // (for a permanent token) project id for the token
+    // (for a permanent token) Project id for the token
     string project_id = 6 [
         (google.api.field_behavior) = OPTIONAL,
         (google.api.field_info).format = UUID4
     ];
-    // (for a permanent token) description of the token
+    // (for a permanent token) Description of the token
     string description = 7;
+
+    // (optional) A host name that is required if the token is used from a web browser.
+    // When set, it's checked against the Referer header.
+    // Note that this doesn't prevent from using the token outside the browser, where the header can easily be forged.
+    repeated string required_origin = 8 [
+        (google.api.field_behavior) = OPTIONAL
+    ];
+
+    // (optional) List of IP addresses allowed to use the token. Could be a IPv4 or CIDR notation
+    repeated string required_ip = 9 [
+        (google.api.field_behavior) = OPTIONAL
+    ];
 
     enum TokenType {
         // One-time token that is valid for a short period of time, just a reference to the current token for one time and exclusive session but may be limited by time, scope, etc.
