@@ -4,6 +4,7 @@ option java_package = "io.emeraldpay.api.proto";
 
 import "google/api/field_info.proto";
 import "google/api/field_behavior.proto";
+import "google/protobuf/field_mask.proto";
 
 service Auth {
     // Exchange a secret Auth Token for a JWT token to be used for further requests, plus a Refresh token to extend the JWT.
@@ -18,6 +19,9 @@ service Auth {
 
     // Issue a new secret token (based on the current authentication)
     rpc IssueToken(IssueTokenRequest) returns (IssuedTokenResponse) {}
+
+    // Update the token details
+    rpc UpdateToken(UpdateTokenRequest) returns (IssuedTokenResponse) {}
 
     // Get the details about the current authentication
     rpc WhoAmI(WhoAmIRequest) returns (WhoAmIResponse) {}
@@ -219,6 +223,67 @@ message IssuedTokenResponse {
     // When the access token expires (millis since epoch).
     // 0 (zero) if never expires.
     uint64 expires_at = 2;
+
+    // Token id
+    string token_id = 3 [
+        (google.api.field_behavior) = REQUIRED,
+        (google.api.field_info).format = UUID4
+    ];
+}
+
+// For an update it's required to specify
+// - the Token Id with its Org Id and Project Id.
+// - update_mask as a list of fields that are actually updated in the request (including setting them to an empty value)
+// - the values for the fields that are updated
+//
+// Fields that are not in the update mask list are ignored. Current token (used in the request) cannot be updated.
+// Token relation to Org Id and Project Id cannot be updated.
+// Only a permanent token can be updated.
+message UpdateTokenRequest {
+    string organization_id = 1 [
+        (google.api.field_behavior) = REQUIRED,
+        (google.api.field_info).format = UUID4
+    ];
+    string project_id = 2 [
+        (google.api.field_behavior) = REQUIRED,
+        (google.api.field_info).format = UUID4
+    ];
+    string token_id = 3 [
+        (google.api.field_behavior) = REQUIRED,
+        (google.api.field_info).format = UUID4
+    ];
+
+    // List of fields that should be updated with request.
+    // For repeated values, like `scopes` it replaces the whole list.
+    // If the new value is null or empty (ex. empty `scopes`, "" for description, or 0 for expire_at) then it erases the stored field value
+    google.protobuf.FieldMask update_mask = 4 [
+        (google.api.field_behavior) = REQUIRED
+    ];
+
+    // Access scopes to be used for the token. Cannot be larger that the current authenticated scope.
+    repeated string scopes = 5 [
+        (google.api.field_behavior) = OPTIONAL
+    ];
+
+    // A timestamp (as millis since epoch) when it expires.
+    uint64 expire_at = 6  [
+        (google.api.field_behavior) = OPTIONAL
+    ];
+
+    // Description of the token
+    string description = 7;
+
+    // A host name that is required if the token is used from a web browser.
+    // When set, it's checked against the Referer header.
+    // Note that this doesn't prevent from using the token outside the browser, where the header can easily be forged.
+    repeated string required_origin = 8 [
+        (google.api.field_behavior) = OPTIONAL
+    ];
+
+    // List of IP addresses allowed to use the token. Could be a IPv4 or CIDR notation
+    repeated string required_ip = 9 [
+        (google.api.field_behavior) = OPTIONAL
+    ];
 }
 
 message DeleteTokenRequest {
