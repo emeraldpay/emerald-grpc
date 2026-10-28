@@ -29,6 +29,9 @@ service Auth {
     // List all tokens for the requests organization
     rpc ListTokens(ListTokensRequest) returns (ListTokensResponse) {}
 
+    // Get the token details
+    rpc GetToken(GetTokenRequest) returns (TokenDetails) {}
+
     // Delete token
     rpc DeleteToken(DeleteTokenRequest) returns (DeleteTokenResponse) {}
 }
@@ -154,6 +157,11 @@ message TokenDetails {
     // The host names that are checked against the Referer header.
     // Any Referer is allowed when the list is empty.
     repeated string require_origin = 6 [
+        (google.api.field_behavior) = OPTIONAL
+    ];
+
+    // When is not 0, it's a timestamp (as millis since epoch) when the token expires.
+    uint64 expires_at = 7 [
         (google.api.field_behavior) = OPTIONAL
     ];
 
@@ -302,4 +310,19 @@ message DeleteTokenRequest {
 }
 
 message DeleteTokenResponse {
+}
+
+message GetTokenRequest {
+    string organization_id = 1 [
+        (google.api.field_behavior) = REQUIRED,
+        (google.api.field_info).format = UUID4
+    ];
+    string project_id = 2 [
+        (google.api.field_behavior) = REQUIRED,
+        (google.api.field_info).format = UUID4
+    ];
+    string token_id = 3 [
+        (google.api.field_behavior) = REQUIRED,
+        (google.api.field_info).format = UUID4
+    ];
 }
