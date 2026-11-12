@@ -24,3 +24,23 @@ service Stat {
   // The sample is not guaranteed to be complete, but it should be representative of the current traffic for debugging.
   rpc SubscribeLogs(message.GetLogsRequest) returns (stream message.LogResponse) {}
 }
+
+// What a customer sees of the accounting. See the Billing section of sierra.message.proto for
+// what the figures mean and the errors shared by every call.
+service Billing {
+
+  // What the project costs over time, split by method or component when asked.
+  // Follows the latest rating of each hour, so a recent cost may change until its hour settles
+  rpc GetCosts(message.GetCostsRequest) returns (stream message.CostSeries) {}
+
+  // What a project holds: the sum of its ledger, and the rated usage not charged into it yet
+  rpc GetBalance(message.GetBalanceRequest) returns (message.Balance) {}
+
+  // A project's account day by day: charged, paid, the payments attempted, and the balance
+  // at the end of each day
+  rpc GetAccountHistory(message.GetAccountHistoryRequest) returns (stream message.AccountHistoryDay) {}
+
+  // The terms: the organization's current discount and billing details, and the project's currency
+  rpc GetOrgBilling(message.GetOrgBillingRequest) returns (message.OrgBilling) {}
+  rpc GetProjectBilling(message.GetProjectBillingRequest) returns (message.ProjectBilling) {}
+}

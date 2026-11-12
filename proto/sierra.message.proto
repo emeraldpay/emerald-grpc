@@ -4,6 +4,7 @@ option java_package = "io.emeraldpay.sierra.proto.message";
 
 import "google/api/field_info.proto";
 import "google/api/field_behavior.proto";
+import "google/protobuf/field_mask.proto";
 
 message Project {
   string org_id = 1;
@@ -101,6 +102,145 @@ message TokenStat {
   string token_id = 1;
   // milliseconds since epoch UTC
   uint64 last_timestamp = 2;
+}
+
+// ---- Limits ----
+//
+// What refused a call before it was served, and the limits that were crossed. Four limits exist:
+// the project's balance and its daily budget, which are money, and the rate and cost of one
+// address on a public token, which are abuse protection. Billing answers what they are set to;
+// this answers when they were hit and what it cost the caller.
+
+// Why a call was refused
+enum DenialReason {
+  DENIAL_REASON_UNSPECIFIED = 0;
+  // the project's balance was exhausted: the call was not paid for
+  DENIAL_REASON_UNPAID = 1;
+  // the project's daily budget was reached
+  DENIAL_REASON_BUDGET = 2;
+  // too many calls from one address on a public token
+  DENIAL_REASON_RATE_LIMIT = 3;
+  // too much cost from one address on a public token
+  DENIAL_REASON_COST_LIMIT = 4;
+  // the token's own restrictions: an origin or an address it is not allowed from
+  DENIAL_REASON_RESTRICTED = 5;
+}
+
+// The calls refused, counted the way GetRequestCountRequest counts the served ones
+message GetDeniedCountRequest {
+  string org_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // milliseconds since epoch, inclusive
+  uint64 timestamp_from = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // milliseconds since epoch, inclusive
+  uint64 timestamp_to = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // service filter, empty means all services
+  repeated string services = 4 [
+    (google.api.field_behavior) = OPTIONAL
+  ];
+  string project_id = 5 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // reason filter, empty means every reason
+  repeated DenialReason reasons = 6 [
+    (google.api.field_behavior) = OPTIONAL
+  ];
+  Granularity granularity = 7 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // one series per service and reason, instead of one per reason
+  bool by_service = 8 [
+    (google.api.field_behavior) = OPTIONAL
+  ];
+}
+
+// One series per reason, and per service when asked
+message GroupDeniedCount {
+  // set when by_service is requested
+  string service = 2;
+  DenialReason reason = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // refused calls for the requested period, split according to granularity, including zero values
+  repeated RequestCount counts = 4;
+}
+
+enum LimitKind {
+  LIMIT_KIND_UNSPECIFIED = 0;
+  // the project's balance, with its overdraft, was spent
+  LIMIT_KIND_BALANCE = 1;
+  // the project's daily budget was reached
+  LIMIT_KIND_BUDGET = 2;
+  // the calls from one address on a public token, over ten minutes
+  LIMIT_KIND_RATE = 3;
+  // the cost from one address on a public token, over an hour
+  LIMIT_KIND_COST = 4;
+}
+
+// How often each limit was hit, and for how long it kept calls out. Counts only: a limit on a
+// public token is crossed per address, and the addresses are many and not the caller's to see
+message GetLimitStatRequest {
+  string org_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  string project_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // Token filter. Empty means every token of the project
+  optional string token_id = 3 [
+    (google.api.field_behavior) = OPTIONAL,
+    (google.api.field_info).format = UUID4
+  ];
+  // kind filter, empty means every kind
+  repeated LimitKind kinds = 4 [
+    (google.api.field_behavior) = OPTIONAL
+  ];
+  // milliseconds since epoch, inclusive
+  uint64 timestamp_from = 5 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // milliseconds since epoch, exclusive. Zero means now
+  uint64 timestamp_to = 6 [
+    (google.api.field_behavior) = OPTIONAL
+  ];
+  Granularity granularity = 7 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+// One series per kind
+message LimitStat {
+  LimitKind kind = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // one per period of the requested granularity, in order, zero values included
+  repeated LimitCount counts = 2;
+}
+
+message LimitCount {
+  // milliseconds since epoch, beginning of the period
+  uint64 timestamp = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // how many times the limit was crossed in the period. For RATE and COST, each address
+  // that crossed it counts once
+  uint64 crossed = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // milliseconds of the period during which calls were refused for it. For RATE and COST
+  // the longest block of any one address, so it never exceeds the period
+  uint64 blocked_ms = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 // Get a sample of the current requests
@@ -217,4 +357,286 @@ message LogResponsePart {
       (google.api.field_behavior) = REQUIRED
     ];
   }
+}
+
+//
+// ============ Billing ============
+//
+
+// A sum of money
+message Money {
+  // Amounts are doubles: this is for display, and the accounting keeps the exact figures.
+  // Negative is what the project owes or was charged
+  double amount = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // ISO 4217, ex. "USD"
+  string currency = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+// ---- Costs ----
+
+// How a cost series is split, under the project it always belongs to
+enum CostBreakdown {
+  // one series per project
+  COST_BREAKDOWN_UNSPECIFIED = 0;
+  // one series per project and method
+  COST_BREAKDOWN_METHOD = 1;
+  // one series per project, method and measurement: the grain a price is set at
+  COST_BREAKDOWN_COMPONENT = 2;
+}
+
+message GetCostsRequest {
+  string org_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  string project_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // milliseconds since epoch, inclusive. Rounded down to the hour
+  uint64 timestamp_from = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // milliseconds since epoch, exclusive. Rounded up to the hour. Zero means now
+  uint64 timestamp_to = 4 [
+    (google.api.field_behavior) = OPTIONAL
+  ];
+  // HOUR, DAY, or MONTH. Anything finer is INVALID_ARGUMENT, since the hour is the grain
+  // a charge exists at
+  Granularity granularity = 5 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  CostBreakdown breakdown = 6 [
+    (google.api.field_behavior) = OPTIONAL
+  ];
+}
+
+// One series of costs of the project, split further when a breakdown is asked for
+message CostSeries {
+  string project_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // the currency of every `amount` in the series: the project's
+  string currency = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // set when breakdown is METHOD or COMPONENT
+  string method = 3;
+  // set when breakdown is COMPONENT, ex. `response`, `usage:rates`
+  string measurement = 4;
+  // one per period of the requested granularity, in order, zero values included
+  repeated Cost costs = 5;
+}
+
+message Cost {
+  // milliseconds since epoch, beginning of the period
+  uint64 timestamp = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // The priced quantity. Only for a COMPONENT series
+  double quantity = 2;
+  // What the project is charged for the period, in the currency of the series: the list price
+  // at the organization's rate and the currency's exchange rate. For a settled hour these are
+  // the rates it was settled at; for an hour not settled yet, the rates in effect now
+  double amount = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message GetBillingStateRequest {
+  string org_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  string project_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+}
+
+// How far behind the usage each figure is
+message BillingState {
+  // milliseconds since epoch. The end of the newest hour GetCosts has a cost for; the usage
+  // after it is in GetLiveCosts only
+  uint64 rated_through = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // milliseconds since epoch. The end of the newest hour charged into the balances, the
+  // `settled_through` every Balance carries
+  uint64 settled_through = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // milliseconds since epoch. The latest moment GetLiveCosts covers: how far the realtime
+  // metering is behind now
+  uint64 live_through = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+// ---- Balances ----
+
+message GetBalanceRequest {
+  string org_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  string project_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+}
+
+message Balance {
+  string project_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // The sum of the ledger: what was paid minus what was charged, in the project's currency.
+  // Negative means the project owes.
+  //
+  // It's the current settled amount, but the number recalculates with new usage data comes in and
+  // may be amended later even for the same settled_through moment. In rare cases it may take up to 72 hours until
+  // a late data comes into balance calculations.
+  Money settled = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  uint64 updated_at = 3;
+  // milliseconds since epoch. The hour up to which every hour of usage is charged into
+  // `settled`; the usage after it is not.
+  uint64 settled_through = 4 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+// ---- History ----
+
+message GetAccountHistoryRequest {
+  string org_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  string project_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // milliseconds since epoch, inclusive. Rounded down to the UTC day
+  uint64 timestamp_from = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // milliseconds since epoch, exclusive. Rounded up to the UTC day. Zero means now
+  uint64 timestamp_to = 4 [
+    (google.api.field_behavior) = OPTIONAL
+  ];
+}
+
+// One day of a project's account: what it was charged, what it paid, and where it stood at the
+// end of the day. By the day the money moved, so a correction of an earlier hour counts on the
+// day it was posted. Days nothing happened on are included, with zeros and the payments empty
+message AccountHistoryDay {
+  // milliseconds since epoch, start of the UTC day
+  uint64 timestamp = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // usage charged that day, corrections of earlier hours included,
+  Money charged = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // money moved by an operator that day, either sign
+  Money adjusted = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // payments credited that day, zero or positive
+  Money paid = 4 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // the balance at the end of the day, in the project's currency
+  Money balance = 5 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+// ---- Terms ----
+
+message GetOrgBillingRequest {
+  string org_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+}
+
+// The terms of an organization: what is agreed with the customer applies to every project of it
+message OrgBilling {
+  string org_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // The discount in effect now. Absent means full price
+  optional Discount discount = 2;
+  // NOT IMPLEMENTED. Absent until it is
+  BillingDetails details = 3;
+}
+
+// The rate the organization is charged at now
+message Discount {
+  // the fraction of the list price paid: 0.8 is twenty percent off, 0 is free of charge
+  double rate = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // milliseconds since epoch, when the discount ends. Zero means no end
+  uint64 expires_at = 2;
+}
+
+message GetProjectBillingRequest {
+  string org_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  string project_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+}
+
+message ProjectBilling {
+  string project_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  string org_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.field_info).format = UUID4
+  ];
+  // ISO 4217. The currency the project is charged and paid in.
+  // Set when the project is created and never changed
+  string currency = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  // The most the project may spend in a UTC day, in USD at list price, before it is disabled
+  // until the day ends. Absent means no budget
+  optional double daily_budget_usd = 4;
+}
+
+// Who is invoiced, and where the documents go
+message BillingDetails {
+  // the name the documents are issued to
+  string legal_name = 1;
+  // where the documents are sent
+  string email = 2;
+  PostalAddress address = 3;
+  // VAT or an equivalent, as the tax authority spells it
+  string tax_id = 4;
+}
+
+message PostalAddress {
+  repeated string lines = 1;
+  string city = 2;
+  string region = 3;
+  string postal_code = 4;
+  // ISO 3166-1 alpha-2
+  string country = 5;
 }
