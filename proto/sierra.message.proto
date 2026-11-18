@@ -2,6 +2,7 @@ syntax = "proto3";
 package emerald.sierra.message;
 option java_package = "io.emeraldpay.sierra.proto.message";
 
+import "common.proto";
 import "google/api/field_info.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/field_mask.proto";
@@ -320,6 +321,7 @@ message LogResponsePart {
     string service = 4 [
       (google.api.field_behavior) = REQUIRED
     ];
+    optional ChainRef blockchain = 5;
   }
 
   message Message {
@@ -333,6 +335,8 @@ message LogResponsePart {
     uint64 response_size = 3 [
       (google.api.field_behavior) = REQUIRED
     ];
+    // An operation in the service call. Ex. JSON RPC name for emerald.blockchain/NativeCall
+    optional string operation = 4;
   }
 
   enum Status {
