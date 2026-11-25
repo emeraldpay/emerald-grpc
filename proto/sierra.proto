@@ -30,7 +30,8 @@ service Stat {
 service Billing {
 
   // What the project costs over time, split by method or component when asked.
-  // Follows the latest rating of each hour, so a recent cost may change until its hour settles
+  // Follows the latest rating of each hour, settled or not, so a cost may change when its hour is
+  // rated again; settling freezes only the discount rate
   rpc GetCosts(message.GetCostsRequest) returns (stream message.CostSeries) {}
 
   // What a project holds: the sum of its ledger, and the rated usage not charged into it yet

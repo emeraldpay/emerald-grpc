@@ -445,8 +445,9 @@ message Cost {
   // The priced quantity. Only for a COMPONENT series
   double quantity = 2;
   // What the project is charged for the period, in the currency of the series: the list price
-  // at the organization's rate and the currency's exchange rate. For a settled hour these are
-  // the rates it was settled at; for an hour not settled yet, the rates in effect now
+  // of that currency at the organization's rate. For a settled hour this is the rate it was
+  // settled at; for an hour not settled yet, the rate agreed for that hour now, which its settling
+  // charges unless the agreement changes first
   double amount = 3 [
     (google.api.field_behavior) = REQUIRED
   ];
@@ -620,9 +621,9 @@ message ProjectBilling {
   string currency = 3 [
     (google.api.field_behavior) = REQUIRED
   ];
-  // The most the project may spend in a UTC day, in USD at list price, before it is disabled
-  // until the day ends. Absent means no budget
-  optional double daily_budget_usd = 4;
+  // The most the project may spend in a UTC day, in the currency of the project at list price,
+  // before it is disabled until the day ends. Absent means no budget
+  optional double daily_budget = 4;
 }
 
 // Who is invoiced, and where the documents go
