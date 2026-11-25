@@ -170,6 +170,9 @@ message TokenDetails {
     repeated string require_ip = 9 [
         (google.api.field_behavior) = OPTIONAL
     ];
+
+    // Flag the token is embedded withing a user-side app
+    bool is_public = 10;
 }
 
 message IssueTokenRequest {
@@ -212,6 +215,11 @@ message IssueTokenRequest {
     repeated string required_ip = 9 [
         (google.api.field_behavior) = OPTIONAL
     ];
+
+    // Flag the token as a public. Ex. for web, mobile, desktop, or other client side app where the token
+    // is embedded in the app and can be extracted by the user.
+    // When flag is the the API may use additional checks or disable access to certain APIs
+    bool is_public = 10;
 
     enum TokenType {
         // One-time token that is valid for a short period of time, just a reference to the current token for one time and exclusive session but may be limited by time, scope, etc.
